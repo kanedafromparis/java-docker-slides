@@ -1,0 +1,34 @@
+# This image is intended for testing purposes, 
+# it only should be used for testing
+# 
+FROM alpine:3.4
+
+# Default to UTF-8 file.encoding
+ENV LANG=C.UTF-8 \
+ JAVA_VERSION=8u111 \ 
+ JAVA_ALPINE_VERSION=8.111.14-r0 \
+ PORT_NUMBER=9090 \
+ COYOTE_STAGE=1
+ 
+RUN set -x && \
+	apk add --no-cache openjdk8="$JAVA_ALPINE_VERSION" && \
+	mkdir -p /opt/kaboom && \
+	mkdir -p /var/dump
+	
+
+COPY ./src/main/java/KaboomServer.java /opt/kaboom
+COPY ./src/main/dockerfiles/bash/coyote.sh /opt/kaboom
+
+WORKDIR /opt/kaboom
+
+#ENTRYPOINT ["/bin/sh"]
+
+RUN cd /opt/kaboom && \
+   chmod a+x /opt/kaboom/coyote.sh && \
+	/usr/lib/jvm/java-1.8-openjdk/bin/javac KaboomServer.java 
+
+EXPOSE 9090
+EXPOSE 2020
+
+CMD ["/opt/kaboom/coyote.sh"]
+

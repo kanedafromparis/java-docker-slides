@@ -1,0 +1,29 @@
+# This image is intended for testing purposes, 
+# it only should be used for testing
+# 
+FROM alpine:3.5
+
+# Default to UTF-8 file.encoding
+ENV LANG=C.UTF-8 \
+ NODEJS_PORT=9094 \
+ NODEJS_VERSION=6.9.5 \ 
+ NODEJS_ALPINE_VERSION=6.9.5-r0
+ 
+RUN set -x && \
+	apk add --no-cache nodejs="$NODEJS_ALPINE_VERSION" && \
+	mkdir -p /opt/kaboom
+	
+
+COPY ./src/main/nodejs/ /opt/kaboom
+
+WORKDIR /opt/kaboom
+
+#ENTRYPOINT ["/bin/sh"]
+
+RUN cd /opt/kaboom && \
+	npm install  
+
+EXPOSE 9094
+
+CMD ["/usr/bin/npm", "start","package.json"]
+

@@ -1,0 +1,45 @@
+= This presentation use the Asciidoctor Maven Plugin: Asciidoc to reveal.js
+
+This presentation try to present java and docker constraint and benefices in order to build a mid-term usage strategie.
+
+== Summary (proposle might evolve)
+
+ - Docker's root (a kernel story)
+ - java usage limites and target
+ - some toolings
+ - some reflexsions on potential practice
+ - Q/A ( because this why we do thoses talks)
+ 
+
+== Usage
+
+=== jdk 9 
+
+Due to some issue with jdk 9, please use jdk8
+ - macosx :  export JAVA_HOME=$(/usr/libexec/java_home -v 1.8)
+
+
+=== default
+
+Convert the AsciiDoc to HTML slides by invoking the `process-resources` goal (configured as the default goal):
+ $ mvn
+
+Open the file _target/generated-slides/slides.html_ in your browser to see the generated HTML file containing the reveal.js presentation deck.
+
+== To use loop
+ $ npm install 
+ $ ./node_modules/devloop/bin/main.js
+
+== Tu use local server for the presentation 
+ $ java -cp target/classes Server ${httpPort}
+ 
+== Asciidoc ressources
+ - http://asciidoctor.org/docs/asciidoc-writers-guide/
+ 
+== Related project
+
+== Related updates
+
+== FeedBack
+
+Please feedback are welcom https://github.com/kanedafromparis/java-docker-slides/issues

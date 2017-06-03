@@ -1,0 +1,35 @@
+# This image is intended for testing purposes, 
+# it only should be used for testing
+# 
+FROM centos:7.3.1611
+
+# Default to UTF-8 file.encoding
+ENV LANG=C.UTF-8 \
+ PORT_NUMBER=9090 
+ 
+RUN set -x && \
+	yum -y update && \
+	mkdir -p /opt/kaboom && \
+	mkdir -p /var/dump
+	
+
+COPY ./src/main/java/KaboomServer.java /opt/kaboom
+COPY ./src/main/dockerfiles/bash/coyote.sh /opt/kaboom
+
+WORKDIR /opt/kaboom
+
+#ENTRYPOINT ["/bin/sh"]
+
+ENV JAVA_VERSION=8u131 \ 
+    JAVA_CENTOS_VERSION=1.8.0.131-3.b12.el7_3
+
+    RUN yum install -y java-1.8.0-openjdk-devel-$JAVA_CENTOS_VERSION
+
+RUN cd /opt/kaboom && \
+   chmod a+x /opt/kaboom/coyote.sh && \
+	/usr/lib/jvm/java-openjdk/bin/javac KaboomServer.java 
+
+EXPOSE 9090
+EXPOSE 2020
+
+CMD ["/opt/kaboom/coyote.sh"]

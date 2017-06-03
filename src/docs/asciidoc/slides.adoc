@@ -1,0 +1,211 @@
+:revnumber: {project-version}
+:example-caption!: toto
+ifndef::imagesdir[:imagesdir: ../../main/resources/images]
+ifndef::sourcedir[:sourcedir: ../../main/java]
+
+= Java and docker, what's up ?
+
+2017-06-13
+
+image::akira-java-docker.jpg[scaledwidth=55%]
+
+
+== Summary
+
+[%step]
+* Todo
+* 
+Don't forget to press the `*s*` key to access speaker notes.
+
+[NOTE.speaker]
+--
+To do
+--
+
+== Who we are
+
+[width="95%",frame="topbot",options="header"]
+|======================
+|Jean-Christophe Sirot |Charles Sabourdin
+a|image::JcSirot-02.png[scaledwidth=65%]         a|image::CaSabourdin-02.png[scaledwidth=65%]
+|Tech lead chez Weborama        a|Architect chez IPPON technologies
+|       | 
+|======================
+
+== Docker
+
+ -  not a VM
+
+[NOTE.speaker]
+--
+CAS : Docker permets d'isoler les processus au niveau du kernel, ce n'est pas  
+--
+
+=== unix process
+
+ - isolates process
+ - chroot
+ - (bsd) jail
+ - ....
+
+=== cgroups
+
+ - ....
+ - 
+ - (bsd) jail
+
+
+=== layer
+
+images:: container-layers.png
+
+ - ease deployment
+ - reduce congestion 
+ 
+[NOTE.speaker]
+--
+CAS : on evoque les layer maintenant,mais c'est princiaplement pour y revenir plus tard  
+--
+
+ 
+== Docker usage stragegy
+
+=== Development 
+
+ - ease (kcompose)
+ - immuability
+ - _12 factors_
+
+=== Production
+
+ - immuability
+ - orchestation
+ - ease deployment
+ - *improve server density*
+ 
+=== Some reminder of /proc 
+===== _And why you should not use docker as root_
+
+Since docker use kernel cgroups, isolation is process based, therefore you would have access to :
+ 
+ * cat /proc/stat
+ * cat /proc/arp
+ * /proc/version
+ * /proc/sys
+ ** /proc/sys/kernel/ctrl-alt-del
+
+
+ 
+== JVM
+
+image::coyote-plan.jpg[scaledwidth=70%]
+
+[NOTE.speaker]
+--
+CAS : Docker permets d'isoler les processus au niveau du kernel, ce n'est pas de la VM
+pensez au /proc/meminfo
+--
+
+
+
+=== Slide
+
+[source,java]
+.Java code from project
+----
+include::{sourcedir}/example/StringUtils.java[tags=contains,indent=0]
+----
+
+
+== Several other -XX command-line options can be useful in troubleshooting.
+
+
+===  1/4
+
+-XX:OnOutOfMemoryError=string is used to specify a command or script to execute when an OutOfMemoryError is first thrown. 
+Several other -XX command-line options can be useful in troubleshooting.
+
+-XX:OnOutOfMemoryError=string is used to specify a command or script to execute when an OutOfMemoryError is first thrown.
+
+-XX:ErrorFile=filename is used to specify a location for the fatal error log file. See C.1 Location of Fatal Error Log.
+
+=== 2/4
+
+-XX:HeapDumpPath=path is used to specify a location for a heap dump. See B.1.2 -XX:+HeapDumpOnOutOfMemoryError Option.
+
+-XX:MaxPermSize=size is used to specify the size of the permanent generation memory. See 3.1.2 Detail Message: PermGen space.
+
+-XX:+PrintCommandLineFlags is used to print all the VM command-line flags. See 7.3 Collecting Data for a Bug Report.
+
+-XX:+PrintConcurrentLocks will cause the Ctrl-Break handler to print a list of concurrent locks owned by each thread.
+
+=== 3/4
+
+-XX:+PrintClassHistogram will cause the Ctrl-Break handler to print a heap histogram.
+
+-XX:+PrintGCDetails and -XX:+PrintGCTimeStamps are used to print detailed information about garbage collection. See B.2.3 -verbose:gc Option.
+
+-XX:+UseAltSigs is used (on Solaris 8 and 9 OS) to instruct the HotSpot VM to use alternate signals to SIGUSR1 and SIGUSR2. See 6.1 Signal Handling on Solaris OS and Linux.
+
+-XX:+UseConcMarkSweepGC, -XX:+UseSerialGC, and -XX:+UseParallelGC specify the garbage collection policy to be used. See 4.2.2 Crash During Garbage Collection.
+
+-XX:ErrorFile=filename is used to specify a location for the fatal error log file. See C.1 Location of Fatal Error Log.
+
+-XX:HeapDumpPath=path is used to specify a location for a heap dump. 
+-XX:MaxPermSize=size is used to specify the size of the permanent generation memory. 
+
+-XX:+PrintCommandLineFlags is used to print all the VM command-line flags. See 7.3 Collecting Data for a Bug Report.
+
+-XX:+PrintConcurrentLocks will cause the Ctrl-Break handler to print a list of concurrent locks owned by each thread.
+
+=== 4/4
+
+-XX:+PrintClassHistogram will cause the Ctrl-Break handler to print a heap histogram.
+
+-XX:+PrintGCDetails and -XX:+PrintGCTimeStamps are used to print detailed information about garbage collection. See B.2.3 -verbose:gc Option.
+
+-XX:+UseAltSigs is used (on Solaris 8 and 9 OS) to instruct the HotSpot VM to use alternate signals to SIGUSR1 and SIGUSR2. See 6.1 Signal Handling on Solaris OS and Linux.
+
+* -XX:+UseConcMarkSweepGC, -XX:+UseSerialGC, and -XX:+UseParallelGC specify the garbage collection policy to be used. 
+
+== Ressources use for this talk
+
+Press the down arrow key to see the next sub-slide.
+
+=== On Docker / cgroups
+//@todo order thoses ressources
+ - http://www.linuxhowtos.org/System/procstat.htm
+ - https://fredrb.github.io/2016/10/01/Understanding-proc/
+ - http://www.tldp.org/LDP/Linux-Filesystem-Hierarchy/html/proc.html
+ - https://www.kernel.org/doc/Documentation/cgroup-v1/cgroups.txt
+ - https://en.wikipedia.org/wiki/Cgroups
+ - https://www.youtube.com/watch?v=-bcE_tt11-s
+
+=== On Docker / ressources
+//@todo order thoses ressources
+ - https://blog.openshift.com/full-cluster-capacity-management-monitoring-openshift
+ -  https://docs.openshift.com/container-platform/latest/dev_guide/compute_resources.html#dev-compute-resources
+ - https://docs.openshift.com/container-platform/3.5/dev_guide/compute_resources.html#dev-quotas
+ - https://docs.docker.com/engine/reference/run/#/user-memory-constraints
+ - https://docs.docker.com/engine/reference/run/#/cpu-quota-constraint
+
+=== On java / ressources
+
+ - https://shipilev.net/jvm-anatomy-park/
+ - https://developers.redhat.com/blog/2017/03/14/java-inside-docker/
+ - http://matthewkwilliams.com/index.php/2016/03/17/docker-cgroups-memory-constraints-and-java-cautionary-tale/
+ 
+=== misc 
+ - https://expressjs.com/en/starter/hello-world.html
+
+==== Potential improvement
+ - do it on che
+
+Presentations can be link:https://github.com/hakimel/reveal.js#pdf-export[exported to PDF], below is an example that's been uploaded to SlideShare.
+
++++
+<iframe id="slideshare" src="http://www.slideshare.net/slideshow/embed_code/13872948" width="455" height="356" style="margin:0;overflow:hidden;border:1px solid #CCC;border-width:1px 1px 0;margin-bottom:5px" allowfullscreen> </iframe>
+<script>
+  document.getElementById('slideshare').attributeName = 'allowfullscreen';
+</script>
++++

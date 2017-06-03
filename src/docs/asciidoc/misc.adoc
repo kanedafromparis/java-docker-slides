@@ -1,0 +1,46 @@
+with java -version
+java version "9-ea"
+Java(TM) SE Runtime Environment (build 9-ea+160)
+Java HotSpot(TM) 64-Bit Server VM (build 9-ea+160, mixed mode)
+
+[source,java]
+----
+
+[ERROR] Failed to execute goal org.asciidoctor:asciidoctor-maven-plugin:1.5.3:process-asciidoc (generate-slides) on project java-and-docker-whatsup: Execution generate-slides of goal org.asciidoctor:asciidoctor-maven-plugin:1.5.3:process-asciidoc failed: (LoadError) load error: jruby/java/java_ext/java.lang -- java.lang.reflect.InaccessibleObjectException: Unable to make protected native java.lang.Object java.lang.Object.clone() throws java.lang.CloneNotSupportedException accessible: module java.base does not "opens java.lang" to unnamed module @36df4c26 -> [Help 1]
+[ERROR]
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR]
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/PluginExecutionException
+----
+
+=== Rem
+
+-- https://blog.docker.com/2013/09/docker-can-now-run-within-docker/
+-- https://github.com/jpetazzo/jpetazzo.github.io/blob/master/_posts/2015-09-03-do-not-use-docker-in-docker-for-ci.markdown
+La production et le developpement c'est pas la même chose.
+
+-- /usr/lib/jvm/java-1.8-openjdk/bin/jstatd -J-Djava.security.policy=jstatd.all.policy -J-Djava.net.preferIPv4Stack=true -p 2020
+
+==== ne pas oublier
+
+* update
+* dependance 
+* gestion des incidents
+* monitoring
+
+* pet versus Catle
+
+* les 12 factors
+
+* docker compose pour la production
+
+* meme binaire mais pas les meme interconnexions
+
+* pensez au differents roles et nouveautés
+* pensez objectifs et KPI
+
+// volumes manager
+// Sidecar / communication avec le deamons local.
+=

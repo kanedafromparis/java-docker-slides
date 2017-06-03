@@ -1,0 +1,15 @@
+{
+  "name": "kaboom",
+  "version": "1.0.0",
+  "description": "This node application is intendead to fill the memory of the docker host, for testing purpose",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.15.3"
+  }
+}

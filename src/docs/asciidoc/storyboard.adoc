@@ -1,0 +1,21 @@
+The storyboard of the presentation :
+
+I create my microserver "/kabooum" that works correctly on my machine.
+It even works properly on my local docker instance.
+
+But when I put it to production into a docker orchestrator (kubernetes/openshift/swarm...) it does not works any more.
+
+First, I notice that for production purpose, it has been limites to 512M, so I add a -Xmx, but it still crash.
+
+- Why is that ?
+
+- because jvm does not that cgroup into account.
+
+- docker use linux kernel, if you do not use "cgroups" layer you access the host
+
+
+(it is experimental in openjdk-9)
+
+it has been backport into jdk-8
+
+Let seen how it works...

@@ -19,12 +19,14 @@ public class KaboomServer {
         if (0 < args.length) {
             port = Integer.parseInt(args[0]);
         }
-
-        HttpServer server = HttpServer.create(new InetSocketAddress(port), 0);
+// tag::start-server[]
+        HttpServer server = 
+          HttpServer.create(new InetSocketAddress(port), 0);
         server.createContext("/", new KRootHandler());
         server.setExecutor(null);
         server.start();
         System.out.println("Kabooum app listening on port " + port);
+// end::start-server[]
     }
 
     static class KRootHandler implements HttpHandler {
@@ -80,31 +82,38 @@ public class KaboomServer {
             NumberFormat format = NumberFormat.getInstance();
             StringBuilder sb = new StringBuilder();
 
-            sb.append("<html><title>Kaboom In Progress</title><body><div>AH AH AH </div><div>log at logs...</div></body></html>");
+            sb.append("{\"title\":\"AH AH AH\", \"comment\":\"log at logs...\"}");
             System.out.println("[debug] " + sb.toString());
             t.sendResponseHeaders(200, sb.length());
             os.write(sb.toString().getBytes());
             os.close();
-
-            Map v;
-            v = new WeakHashMap();
-            int i = 0;
-            while (true) {
-                i++;
-                if (i>10000){
-                  i=0;
-                  // the Thread.sleep is here in order to allows
-                  // to see the docker host swapping
-                  try {
-                      Thread.sleep(1000);                 //1000 milliseconds is one second.
-                  } catch(InterruptedException ex) {
-                      Thread.currentThread().interrupt();
-                  }
+// tag::memory-monger[]
+            Thread thread = new Thread() {
+                public void run() {
+                    Map v;
+                    v = new WeakHashMap();
+                    int i = 0;
+                    while (true) {
+                        i++;
+                        if (i > 10000) {
+                            i = 0;
+                            // the Thread.sleep is here in order to allows
+                            // to see the docker host swapping
+                            try {
+                                Thread.sleep(1000);                 //1000 milliseconds is one second.
+                            } catch (InterruptedException ex) {
+                                Thread.currentThread().interrupt();
+                            }
+                        }
+                        byte b[] = new byte[1048576];
+                        Object put = v.put(i, b);
+                        //System.out.println("free memory: " + format.format(runtime.freeMemory()/ 1024));
+                    }
                 }
-                byte b[] = new byte[1048576];
-                Object put = v.put(i, b);
-                //System.out.println("free memory: " + format.format(runtime.freeMemory()/ 1024));
-            }
+            };
+            thread.start();
+// end::memory-monger[]
+
 
         }
     }

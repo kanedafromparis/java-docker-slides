@@ -32,6 +32,48 @@ a|image::JcSirot-02.png[scaledwidth=65%]         a|image::CaSabourdin-02.png[sca
 |       | 
 |======================
 
+== My microservice
+
+=== Simple server
+
+[source,java,medium]
+.Java code from project
+----
+include::{sourcedir}/KaboomServer.java[tags=start-server,indent=0]
+----
+
+=== Look closer to treatment
+
+[source,java,medium]
+.Java code from project
+----
+include::{sourcedir}/KaboomServer.java[tags=memory-monger,indent=0]
+----
+
+=== Test on my machine
+
+[source,java,medium]
+.Java code from project
+cd $PROJECT/target/classes && \
+java KaboomServer 9090 
+
+=== Test on my docker machine
+
+[source,java,medium]
+.Java code from project
+cd $PROJECT/target/classes && \
+java KaboomServer 9090 
+
+
+
+[NOTE.speaker]
+--
+CAS : Docker permets d'isoler les processus au niveau du kernel, ce n'est pas  
+--
+
+=== unix process
+
+
 == Docker
 
  -  not a VM

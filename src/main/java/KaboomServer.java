@@ -19,8 +19,8 @@ public class KaboomServer {
             port = Integer.parseInt(args[0]);
         }
 // tag::start-server[]
-        HttpServer server = 
-        HttpServer.create(new InetSocketAddress(port), 0);
+        HttpServer server
+                = HttpServer.create(new InetSocketAddress(port), 0);
         server.createContext("/", new KRootHandler());
         server.setExecutor(null);
         server.start();
@@ -28,8 +28,8 @@ public class KaboomServer {
 // end::start-server[]
     }
     static final Map m = new WeakHashMap();
-    
-    
+    static int nbUser = 0;
+
     static class KRootHandler implements HttpHandler {
 
         @Override
@@ -54,7 +54,7 @@ public class KaboomServer {
             long maxMemory = runtime.maxMemory();
             long allocatedMemory = runtime.totalMemory();
             long freeMemory = runtime.freeMemory();
-            
+
             sb.append("<html><title>Kaboom server</title><body>");
             sb.append("<div><h3>Kaboom server</h3>This server is intended to crash all the memory of the host if you go to <a href=\"/kaboom\">this links<a><div>");
             sb.append("<div>").append("free memory: ").append(format.format(freeMemory / 1024)).append("<br/>");
@@ -69,10 +69,11 @@ public class KaboomServer {
         }
 
         /**
-         * 
+         *
          * @param t
-         * @throws IOException 
-         * @see http://alvinalexander.com/blog/post/java/java-program-consume-all-memory-ram-on-computer
+         * @throws IOException
+         * @see
+         * http://alvinalexander.com/blog/post/java/java-program-consume-all-memory-ram-on-computer
          */
         private void getKaboomPage(HttpExchange t) throws IOException {
             OutputStream os = t.getResponseBody();
@@ -89,35 +90,38 @@ public class KaboomServer {
             //static final Map v = new WeakHashMap();
             Thread thread = new Thread() {
                 public void run() {
-                    int i = 0,j = 0;
+                    int i = 0, j = 0;
+                    Random ran = new Random(10);
+                    int fill = ran.nextInt(15) * 120000;
+                    int stack = 0;
                     while (true) {
-                        i++;j++;
+                        i++;
+                        j++;
                         if (i > 10000) {
                             i = 0;
                             // the Thread.sleep is here in order to allows
                             // to see the docker host swapping
                             try {
-                                Thread.sleep(1000);                 //1000 milliseconds is one second.
+                                Thread.sleep(10);                 //1000 milliseconds is one second.
+                                stack=stack+fill;
+                                byte b[] = new byte[stack];
+                                Object put = m.put(j, b);
                             } catch (InterruptedException ex) {
                                 Thread.currentThread().interrupt();
                             }
                         }
-                        Random ran = new Random(10);
-                        byte b[] = new byte[ran.nextInt(15)*12000000];
-                        Object put = m.put(j, b);
+
                         //l.add(b);
                         //l2.add(b);
-                        System.out.println(j+" - free maxmemory : " + format.format(runtime.maxMemory()/ 1024));
-                        System.out.println(j+" - free memory    : " + format.format(runtime.freeMemory()/ 1024));
+                        //System.out.println(j+" - free maxmemory : " + format.format(runtime.maxMemory()/ 1024));
+                        //System.out.println(j+" - free memory    : " + format.format(runtime.freeMemory()/ 1024));
                     }
                 }
             };
             thread.start();
 // end::memory-monger[]
 
-
         }
     }
-
 
 }

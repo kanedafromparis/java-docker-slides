@@ -10,12 +10,7 @@ ifndef::sourcedir[:sourcedir: ../../main/java]
 image::akira-java-docker.jpg[scaledwidth=55%]
 
 
-== Summary
-
-[%step]
-* Todo
-
- Don't forget to press the `*s*` key to access speaker notes.
+== Disclaimer
 
 [medium]
 Le code et les situations de ce récit étant purement fictifs, toute ressemblance avec des personnes ou des situations existantes ou ayant existé ne saurait être que fortuite ;-)
@@ -56,8 +51,8 @@ include::{sourcedir}/KaboomServer.java[tags=memory-monger,indent=0]
 === Test on my machine
 
 [source,java,medium]
-.Java code from project
-cd $PROJECT/target/classes && \
+.local test ;-)
+  cd $PROJECT/target/classes && \
 java KaboomServer 9090 
 
 [source,bash,medium]
@@ -66,12 +61,14 @@ curl http://127.0.0.1:9090/kaboom
 === Test on my docker machine
 
 [source,java,medium]
-.Java code from project
+.on docker
   # docker-machine create --driver virtualbox demo-jvm ; \
 eval $(docker-machine env demo-jvm) && \
 cd $PROJECT/ && \
-docker build -t dockerfile.jdk8.alpine.34.111 -f ./src/main/dockerfiles/Dockerfile.jdk8.alpine.34.111 ./ &&
-docker run -it -p 9090:9090 -p 2020:2020 -e "COYOTE_STAGE=0" dockerfile.jdk8.alpine.34.111
+docker build -t dockerfile.jdk8.alpine.34.111 -f
+./src/main/dockerfiles/Dockerfile.jdk8.alpine.34.111 ./ &&
+docker run -it -p 9090:9090 \
+-e "JAVA_PARAM=0" dockerfile.jdk8.alpine.34.111
 
 [source,bash,medium]
 curl http://$(docker-machine ip demo-jvm):9090/kaboom
@@ -80,25 +77,39 @@ curl http://$(docker-machine ip demo-jvm):9090/kaboom
 
 == Let's move to prod...
 
+image::coyote-plan.jpg[scaledwidth=70%]
+
 === Shared ressources
 
+start n docker with 256M (this is production, ressources are shared ;-)
+  
+[source,bash,medium]
+ ./src/main/demoscript/coyote.js --action run --image 0 --docker-param 1 --java-param 0
+   
 [source,java,medium]
-.start n docker with 256M (this is production, ressources are shared ;-)
-./src/main/demoscript/coyote.js --action run --image 0 --stage 1 --test 0
+docker run -it -m 256M -p 9090:9090 -e "JAVA_PARAM=0" dockerfile.jdk8.alpine.34.111
+   
+[source,java,medium]
+java  KaboomServer 9090
+  
 
 [NOTE.speaker]
 --
 CAS : ressources problem
 Please production increase ram to the docker it has been "OOMKilled"
-
 --
 
 === increase the RAM ;-)
 
 
 [source,java,medium]
-.start n docker with 512M (this is production, ressources are shared ;-)
-/coyote.js --action run --image 0 --stage 2 --test 0
+  ./src/main/demoscript/coyote.js --action run --image 0 --docker-param 2 --java-param 0
+   
+[source,java,medium]
+docker run -it -m 512M -p 9090:9090 -e "JAVA_PARAM=0" dockerfile.jdk8.alpine.34.111
+    
+[source,java,medium]
+java  KaboomServer 9090
 
 [NOTE.speaker]
 --
@@ -109,192 +120,187 @@ CAS : It still crash that't you code dude, please set Xmx correctly...
 
 
 [source,java,medium]
-.start n docker with 256M (this is production, ressources are shared ;-)
-/coyote.js --action run --image 0 --stage 2 --test 1
-
+  ./src/main/demoscript/coyote.js --action run --image 0 --docker-param 2 --java-param 1
+  
+[source,java,medium]
+docker run -it -m 512M -p 9090:9090 -e "JAVA_PARAM=0" dockerfile.jdk8.alpine.34.111
+    
+[source,java,medium]
+java  -Xms256M -Xmx512M  KaboomServer 9090
+  
+  
 [NOTE.speaker]
 --
 CAS : It still does not crash but gosh it swap so much, and if crahs sometime   
 --
 
+=== Something that never happen ;-)
 
 
+[source,java,medium]
+  ./src/main/demoscript/coyote.js --action run --image 0 --docker-param 2 --java-param 2
+
+[source,java,medium]
+docker run -it -m 512M -p 9090:9090 -e "JAVA_PARAM=0" dockerfile.jdk8.alpine.34.111
+    
+[source,java,medium]
+java -Xms512M -Xmx1024M  KaboomServer 9090
+
+[NOTE.speaker]
+--
+CAS : In fact, this will fill the swap, but in order to show it, we will increase the -Xmx
+--
 
 
+=== It swap too much ? Let's remove it
 
+
+[source,java,medium]
+ ./src/main/demoscript/coyote.js --action run --image 0 --docker-param 3 --java-param 3
+  
+[source,java,medium]
+docker run -it -m 512M --memory-swap -1 -p 9090:9090 -e "JAVA_PARAM=3" dockerfile.jdk8.alpine.34.111
+   
+[source,java,medium]
+java -Xms1024M -Xmx3584M  KaboomServer 9090
+
+[NOTE.speaker]
+--
+CAS : In fact, this will still fill the swap, but in order to show it, we will increase the -Xmx
+--
+
+=== The hard way
+
+[source,bash,medium]
+sudo swapoff -a
+
+[source,java,medium]
+ ./src/main/demoscript/coyote.js --action run --image 0 --docker-param 3 --java-param 3
+
+[source,java,medium]
+docker run -it -m 512M --memory-swap -1 -p 9090:9090 -e "JAVA_PARAM=3" dockerfile.jdk8.alpine.34.111
+   
+[source,java,medium]
+java -Xms1024M -Xmx3584M  KaboomServer 9090
+
+[NOTE.speaker]
+--
+CAS : OMKill ;-)
+--
+
+
+== What the ....
+
+=== Something to remember 
+
+ * Docker is not a VM
+ * It's link to the kernel
+
+ 
+[NOTE.speaker]
+--
+CAS : think /proc..., think maloc 
+--
+
+=== Remember where it came from 
+
+ * Lxc 
+ * chroot
+ * (bsd) jail
+
+ 
+[NOTE.speaker]
+--
+CAS : think /proc..., think maloc 
+--
+
+=== What can we do
+
+ * tune the Xmx
+ * use jdk9
+ * use jdk8 > 131
 
 
 [NOTE.speaker]
 --
-CAS : Docker permets d'isoler les processus au niveau du kernel, ce n'est pas  
+CAS : ressources problem
+Please production increase ram to the docker it has been "OOMKilled"
 --
 
-=== unix process
+== ExperimentalVMOptions
 
+image::emclume.jpg[scaledwidth=70%]
 
-== Docker
+=== ExperimentalVMOptions
 
- -  not a VM
+ * -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap
+ * -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -XX:MaxRAMFraction=1
+ 
 
 [NOTE.speaker]
 --
-CAS : Docker permets d'isoler les processus au niveau du kernel, ce n'est pas  
+CAS : It's experimental, use canary dev ;-)
 --
 
-=== unix process
-
- - isolates process
- - chroot
- - (bsd) jail
- - ....
-
-=== cgroups
-
- - ....
- - 
- - (bsd) jail
-
-
-=== layer
-
-images:: container-layers.png
-
- - ease deployment
- - reduce congestion 
- 
-[NOTE.speaker]
---
-CAS : on evoque les layer maintenant,mais c'est princiaplement pour y revenir plus tard  
---
+=== -XX:+UseCGroupMemoryLimitForHeap
 
  
-== Docker usage stragegy
+[source,java,medium]
+ ./src/main/demoscript/coyote.js --action run --image 2 --docker-param 3 --java-param 3
+[source,java,medium] 
+docker run -it -m 512M --memory-swap -1 -p 9090:9090 \
+ -e "JAVA_PARAM=7" dockerfile.jdk8.alpine.36.131
 
-=== Development 
+[source,java,medium]   
+java -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap \
+-XshowSettings:vm KaboomServer 9090
+    
 
- - ease (kcompose)
- - immuability
- - _12 factors_
+=== -XX:MaxRAMFraction=1
 
-=== Production
+[source,java,medium]
+  ./src/main/demoscript/coyote.js --action run --image 2 --docker-param 3 --java-param 3
+  
+[source,java,medium]
+docker run -it -m 512M --memory-swap -1 -p 9090:9090 \
+ -e "JAVA_PARAM=9" dockerfile.jdk8.alpine.36.131
 
- - immuability
- - orchestation
- - ease deployment
- - *improve server density*
- 
-=== Some reminder of /proc 
-===== _And why you should not use docker as root_
+[source,java,medium]  
+java -XX:+UnlockExperimentalVMOptions \
+ -XX:+UseCGroupMemoryLimitForHeap -XX:MaxRAMFraction=1 \
+ -XshowSettings:vm KaboomServer 9090
 
-Since docker use kernel cgroups, isolation is process based, therefore you would have access to :
- 
- * cat /proc/stat
- * cat /proc/arp
- * /proc/version
- * /proc/sys
- ** /proc/sys/kernel/ctrl-alt-del
+=== -XX:MaxRAMFraction=2
 
+[source,java,medium]
+  ./src/main/demoscript/coyote.js --action run --image 2 --docker-param 3 --java-param 3
+  
+[source,java,medium]
+docker run -it -m 512M --memory-swap -1 -p 9090:9090 \
+ -e "JAVA_PARAM=11" dockerfile.jdk8.alpine.36.131
 
- 
-== JVM
-
-image::coyote-plan.jpg[scaledwidth=70%]
+[source,java,medium]
+java -XX:+UnlockExperimentalVMOptions \
+ -XX:+UseCGroupMemoryLimitForHeap -XX:MaxRAMFraction=2 \
+ -XshowSettings:vm KaboomServer 9090
 
 [NOTE.speaker]
 --
-CAS : Docker permets d'isoler les processus au niveau du kernel, ce n'est pas de la VM
-pensez au /proc/meminfo
+CAS : It's experimental, use canary dev ;-)
 --
 
-== Several other -XX command-line options can be useful in troubleshooting.
+== Take away
 
+image::willy-il-coyote-arrow.jpg[scaledwidth=70%]
 
-===  1/4
+[NOTE.speaker]
+--
+CAS : 
+ - VM java et JM docker have philo similarity
+ - Docker is not VM
+ - Let docker deal with ressource management
+--
 
--XX:OnOutOfMemoryError=string is used to specify a command or script to execute when an OutOfMemoryError is first thrown. 
-Several other -XX command-line options can be useful in troubleshooting.
+== Questions
 
--XX:OnOutOfMemoryError=string is used to specify a command or script to execute when an OutOfMemoryError is first thrown.
-
--XX:ErrorFile=filename is used to specify a location for the fatal error log file. See C.1 Location of Fatal Error Log.
-
-=== 2/4
-
--XX:HeapDumpPath=path is used to specify a location for a heap dump. See B.1.2 -XX:+HeapDumpOnOutOfMemoryError Option.
-
--XX:MaxPermSize=size is used to specify the size of the permanent generation memory. See 3.1.2 Detail Message: PermGen space.
-
--XX:+PrintCommandLineFlags is used to print all the VM command-line flags. See 7.3 Collecting Data for a Bug Report.
-
--XX:+PrintConcurrentLocks will cause the Ctrl-Break handler to print a list of concurrent locks owned by each thread.
-
-=== 3/4
-
--XX:+PrintClassHistogram will cause the Ctrl-Break handler to print a heap histogram.
-
--XX:+PrintGCDetails and -XX:+PrintGCTimeStamps are used to print detailed information about garbage collection. See B.2.3 -verbose:gc Option.
-
--XX:+UseAltSigs is used (on Solaris 8 and 9 OS) to instruct the HotSpot VM to use alternate signals to SIGUSR1 and SIGUSR2. See 6.1 Signal Handling on Solaris OS and Linux.
-
--XX:+UseConcMarkSweepGC, -XX:+UseSerialGC, and -XX:+UseParallelGC specify the garbage collection policy to be used. See 4.2.2 Crash During Garbage Collection.
-
--XX:ErrorFile=filename is used to specify a location for the fatal error log file. See C.1 Location of Fatal Error Log.
-
--XX:HeapDumpPath=path is used to specify a location for a heap dump. 
--XX:MaxPermSize=size is used to specify the size of the permanent generation memory. 
-
--XX:+PrintCommandLineFlags is used to print all the VM command-line flags. See 7.3 Collecting Data for a Bug Report.
-
--XX:+PrintConcurrentLocks will cause the Ctrl-Break handler to print a list of concurrent locks owned by each thread.
-
-=== 4/4
-
--XX:+PrintClassHistogram will cause the Ctrl-Break handler to print a heap histogram.
-
--XX:+PrintGCDetails and -XX:+PrintGCTimeStamps are used to print detailed information about garbage collection. See B.2.3 -verbose:gc Option.
-
--XX:+UseAltSigs is used (on Solaris 8 and 9 OS) to instruct the HotSpot VM to use alternate signals to SIGUSR1 and SIGUSR2. See 6.1 Signal Handling on Solaris OS and Linux.
-
-* -XX:+UseConcMarkSweepGC, -XX:+UseSerialGC, and -XX:+UseParallelGC specify the garbage collection policy to be used. 
-
-== Ressources use for this talk
-
-Press the down arrow key to see the next sub-slide.
-
-=== On Docker / cgroups
-//@todo order thoses ressources
- - http://www.linuxhowtos.org/System/procstat.htm
- - https://fredrb.github.io/2016/10/01/Understanding-proc/
- - http://www.tldp.org/LDP/Linux-Filesystem-Hierarchy/html/proc.html
- - https://www.kernel.org/doc/Documentation/cgroup-v1/cgroups.txt
- - https://en.wikipedia.org/wiki/Cgroups
- - https://www.youtube.com/watch?v=-bcE_tt11-s
-
-=== On Docker / ressources
-//@todo order thoses ressources
- - https://blog.openshift.com/full-cluster-capacity-management-monitoring-openshift
- -  https://docs.openshift.com/container-platform/latest/dev_guide/compute_resources.html#dev-compute-resources
- - https://docs.openshift.com/container-platform/3.5/dev_guide/compute_resources.html#dev-quotas
- - https://docs.docker.com/engine/reference/run/#/user-memory-constraints
- - https://docs.docker.com/engine/reference/run/#/cpu-quota-constraint
-
-=== On java / ressources
-
- - https://shipilev.net/jvm-anatomy-park/
- - https://developers.redhat.com/blog/2017/03/14/java-inside-docker/
- - http://matthewkwilliams.com/index.php/2016/03/17/docker-cgroups-memory-constraints-and-java-cautionary-tale/
- 
-=== misc 
- - https://expressjs.com/en/starter/hello-world.html
-
-==== Potential improvement
- - do it on che
-
-Presentations can be link:https://github.com/hakimel/reveal.js#pdf-export[exported to PDF], below is an example that's been uploaded to SlideShare.
-
-+++
-<iframe id="slideshare" src="http://www.slideshare.net/slideshow/embed_code/13872948" width="455" height="356" style="margin:0;overflow:hidden;border:1px solid #CCC;border-width:1px 1px 0;margin-bottom:5px" allowfullscreen> </iframe>
-<script>
-  document.getElementById('slideshare').attributeName = 'allowfullscreen';
-</script>
-+++
+image::Thats_all_folks.png[scaledwidth=150%]

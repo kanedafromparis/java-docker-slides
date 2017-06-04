@@ -1,3 +1,4 @@
+
 == misc
 
 with java -version
@@ -45,4 +46,113 @@ La production et le developpement c'est pas la même chose.
 
 // volumes manager
 // Sidecar / communication avec le deamons local.
-=
+
+=== -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap
+
+ * -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap
+ * -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -XX:MaxRAMFraction=1
+ 
+
+[NOTE.speaker]
+--
+CAS : It's experimental, use canary dev ;-)
+--
+
+
+
+
+
+-- 2 dev by pass to -Xmx4096M
+Gros swap
+-- force le "no swap"
+--> y sans fout
+
+-- swapoff > crash
+
+
+
+
+
+
+[NOTE.speaker]
+--
+CAS : Docker permets d'isoler les processus au niveau du kernel, ce n'est pas  
+--
+
+=== unix process
+
+
+== Docker
+
+ -  not a VM
+
+[NOTE.speaker]
+--
+CAS : Docker permets d'isoler les processus au niveau du kernel, ce n'est pas  
+--
+
+=== unix process
+
+ - isolates process
+ - chroot
+ - (bsd) jail
+ - ....
+
+=== cgroups
+
+ - ....
+ - 
+ - (bsd) jail
+
+
+=== layer
+
+images:: container-layers.png
+
+ - ease deployment
+ - reduce congestion 
+ 
+[NOTE.speaker]
+--
+CAS : on evoque les layer maintenant,mais c'est princiaplement pour y revenir plus tard  
+--
+
+ 
+== Docker usage stragegy
+
+=== Development 
+
+ - ease (kcompose)
+ - immuability
+ - _12 factors_
+
+=== Production
+
+ - immuability
+ - orchestation
+ - ease deployment
+ - *improve server density*
+ 
+=== Some reminder of /proc 
+===== _And why you should not use docker as root_
+
+Since docker use kernel cgroups, isolation is process based, therefore you would have access to :
+ 
+ * cat /proc/stat
+ * cat /proc/arp
+ * /proc/version
+ * /proc/sys
+ ** /proc/sys/kernel/ctrl-alt-del
+
+
+ 
+== JVM
+
+image::coyote-plan.jpg[scaledwidth=70%]
+
+[NOTE.speaker]
+--
+CAS : Docker permets d'isoler les processus au niveau du kernel, ce n'est pas de la VM
+pensez au /proc/meminfo
+--
+

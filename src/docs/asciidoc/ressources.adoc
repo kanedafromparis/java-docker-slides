@@ -1,0 +1,91 @@
+== Several other -XX command-line options can be useful in troubleshooting.
+
+===  1/4
+
+-XX:OnOutOfMemoryError=string is used to specify a command or script to execute when an OutOfMemoryError is first thrown. 
+Several other -XX command-line options can be useful in troubleshooting.
+
+-XX:OnOutOfMemoryError=string is used to specify a command or script to execute when an OutOfMemoryError is first thrown.
+
+-XX:ErrorFile=filename is used to specify a location for the fatal error log file. See C.1 Location of Fatal Error Log.
+
+=== 2/4
+
+-XX:HeapDumpPath=path is used to specify a location for a heap dump. See B.1.2 -XX:+HeapDumpOnOutOfMemoryError Option.
+
+-XX:MaxPermSize=size is used to specify the size of the permanent generation memory. See 3.1.2 Detail Message: PermGen space.
+
+-XX:+PrintCommandLineFlags is used to print all the VM command-line flags. See 7.3 Collecting Data for a Bug Report.
+
+-XX:+PrintConcurrentLocks will cause the Ctrl-Break handler to print a list of concurrent locks owned by each thread.
+
+=== 3/4
+
+-XX:+PrintClassHistogram will cause the Ctrl-Break handler to print a heap histogram.
+
+-XX:+PrintGCDetails and -XX:+PrintGCTimeStamps are used to print detailed information about garbage collection. See B.2.3 -verbose:gc Option.
+
+-XX:+UseAltSigs is used (on Solaris 8 and 9 OS) to instruct the HotSpot VM to use alternate signals to SIGUSR1 and SIGUSR2. See 6.1 Signal Handling on Solaris OS and Linux.
+
+-XX:+UseConcMarkSweepGC, -XX:+UseSerialGC, and -XX:+UseParallelGC specify the garbage collection policy to be used. See 4.2.2 Crash During Garbage Collection.
+
+-XX:ErrorFile=filename is used to specify a location for the fatal error log file. See C.1 Location of Fatal Error Log.
+
+-XX:HeapDumpPath=path is used to specify a location for a heap dump. 
+-XX:MaxPermSize=size is used to specify the size of the permanent generation memory. 
+
+-XX:+PrintCommandLineFlags is used to print all the VM command-line flags. See 7.3 Collecting Data for a Bug Report.
+
+-XX:+PrintConcurrentLocks will cause the Ctrl-Break handler to print a list of concurrent locks owned by each thread.
+
+=== 4/4
+
+-XX:+PrintClassHistogram will cause the Ctrl-Break handler to print a heap histogram.
+
+-XX:+PrintGCDetails and -XX:+PrintGCTimeStamps are used to print detailed information about garbage collection. See B.2.3 -verbose:gc Option.
+
+-XX:+UseAltSigs is used (on Solaris 8 and 9 OS) to instruct the HotSpot VM to use alternate signals to SIGUSR1 and SIGUSR2. See 6.1 Signal Handling on Solaris OS and Linux.
+
+* -XX:+UseConcMarkSweepGC, -XX:+UseSerialGC, and -XX:+UseParallelGC specify the garbage collection policy to be used. 
+
+== Ressources use for this talk
+
+Press the down arrow key to see the next sub-slide.
+
+=== On Docker / cgroups
+//@todo order thoses ressources
+ - http://www.linuxhowtos.org/System/procstat.htm
+ - https://fredrb.github.io/2016/10/01/Understanding-proc/
+ - http://www.tldp.org/LDP/Linux-Filesystem-Hierarchy/html/proc.html
+ - https://www.kernel.org/doc/Documentation/cgroup-v1/cgroups.txt
+ - https://en.wikipedia.org/wiki/Cgroups
+ - https://www.youtube.com/watch?v=-bcE_tt11-s
+
+=== On Docker / ressources
+//@todo order thoses ressources
+ - https://blog.openshift.com/full-cluster-capacity-management-monitoring-openshift
+ -  https://docs.openshift.com/container-platform/latest/dev_guide/compute_resources.html#dev-compute-resources
+ - https://docs.openshift.com/container-platform/3.5/dev_guide/compute_resources.html#dev-quotas
+ - https://docs.docker.com/engine/reference/run/#/user-memory-constraints
+ - https://docs.docker.com/engine/reference/run/#/cpu-quota-constraint
+
+=== On java / ressources
+
+ - https://shipilev.net/jvm-anatomy-park/
+ - https://developers.redhat.com/blog/2017/03/14/java-inside-docker/
+ - http://matthewkwilliams.com/index.php/2016/03/17/docker-cgroups-memory-constraints-and-java-cautionary-tale/
+ 
+=== misc 
+ - https://expressjs.com/en/starter/hello-world.html
+
+==== Potential improvement
+ - do it on che
+
+Presentations can be link:https://github.com/hakimel/reveal.js#pdf-export[exported to PDF], below is an example that's been uploaded to SlideShare.
+
++++
+<iframe id="slideshare" src="http://www.slideshare.net/slideshow/embed_code/13872948" width="455" height="356" style="margin:0;overflow:hidden;border:1px solid #CCC;border-width:1px 1px 0;margin-bottom:5px" allowfullscreen> </iframe>
+<script>
+  document.getElementById('slideshare').attributeName = 'allowfullscreen';
+</script>
++++

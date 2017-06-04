@@ -103,8 +103,8 @@ public class KaboomServer {
                                 Thread.currentThread().interrupt();
                             }
                         }
-                        Random ran = new Random(1048576);
-                        byte b[] = new byte[ran.nextInt(1048576)];
+                        Random ran = new Random(10);
+                        byte b[] = new byte[ran.nextInt(15)*12000];
                         Object put = v.put(i, b);
                         //System.out.println("free memory: " + format.format(runtime.freeMemory()/ 1024));
                     }

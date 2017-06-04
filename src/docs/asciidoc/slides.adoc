@@ -14,9 +14,12 @@ image::akira-java-docker.jpg[scaledwidth=55%]
 
 [%step]
 * Todo
-* 
-Don't forget to press the `*s*` key to access speaker notes.
 
+ Don't forget to press the `*s*` key to access speaker notes.
+
+[medium]
+Le code et les situations de ce récit étant purement fictifs, toute ressemblance avec des personnes ou des situations existantes ou ayant existé ne saurait être que fortuite ;-)
+ 
 [NOTE.speaker]
 --
 To do
@@ -57,12 +60,67 @@ include::{sourcedir}/KaboomServer.java[tags=memory-monger,indent=0]
 cd $PROJECT/target/classes && \
 java KaboomServer 9090 
 
+[source,bash,medium]
+curl http://127.0.0.1:9090/kaboom
+
 === Test on my docker machine
 
 [source,java,medium]
 .Java code from project
-cd $PROJECT/target/classes && \
-java KaboomServer 9090 
+  # docker-machine create --driver virtualbox demo-jvm ; \
+eval $(docker-machine env demo-jvm) && \
+cd $PROJECT/ && \
+docker build -t dockerfile.jdk8.alpine.34.111 -f ./src/main/dockerfiles/Dockerfile.jdk8.alpine.34.111 ./ &&
+docker run -it -p 9090:9090 -p 2020:2020 -e "COYOTE_STAGE=0" dockerfile.jdk8.alpine.34.111
+
+[source,bash,medium]
+curl http://$(docker-machine ip demo-jvm):9090/kaboom
+
+
+
+== Let's move to prod...
+
+=== Shared ressources
+
+[source,java,medium]
+.start n docker with 256M (this is production, ressources are shared ;-)
+./src/main/demoscript/coyote.js --action run --image 0 --stage 1 --test 0
+
+[NOTE.speaker]
+--
+CAS : ressources problem
+Please production increase ram to the docker it has been "OOMKilled"
+
+--
+
+=== increase the RAM ;-)
+
+
+[source,java,medium]
+.start n docker with 512M (this is production, ressources are shared ;-)
+/coyote.js --action run --image 0 --stage 2 --test 0
+
+[NOTE.speaker]
+--
+CAS : It still crash that't you code dude, please set Xmx correctly...   
+--
+
+=== set -Xms256M -Xmx512M
+
+
+[source,java,medium]
+.start n docker with 256M (this is production, ressources are shared ;-)
+/coyote.js --action run --image 0 --stage 2 --test 1
+
+[NOTE.speaker]
+--
+CAS : It still does not crash but gosh it swap so much, and if crahs sometime   
+--
+
+
+
+
+
 
 
 
@@ -147,17 +205,6 @@ image::coyote-plan.jpg[scaledwidth=70%]
 CAS : Docker permets d'isoler les processus au niveau du kernel, ce n'est pas de la VM
 pensez au /proc/meminfo
 --
-
-
-
-=== Slide
-
-[source,java]
-.Java code from project
-----
-include::{sourcedir}/example/StringUtils.java[tags=contains,indent=0]
-----
-
 
 == Several other -XX command-line options can be useful in troubleshooting.
 

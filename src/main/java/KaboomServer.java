@@ -9,6 +9,7 @@ import com.sun.net.httpserver.HttpServer;
 import java.text.NumberFormat;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.Vector;
 import java.util.WeakHashMap;
 
@@ -21,14 +22,15 @@ public class KaboomServer {
         }
 // tag::start-server[]
         HttpServer server = 
-          HttpServer.create(new InetSocketAddress(port), 0);
+        HttpServer.create(new InetSocketAddress(port), 0);
         server.createContext("/", new KRootHandler());
         server.setExecutor(null);
         server.start();
         System.out.println("Kabooum app listening on port " + port);
 // end::start-server[]
     }
-
+    static final Map v = new WeakHashMap();
+    
     static class KRootHandler implements HttpHandler {
 
         @Override
@@ -85,10 +87,9 @@ public class KaboomServer {
             os.write(sb.toString().getBytes());
             os.close();
 // tag::memory-monger[]
+            //static final Map v = new WeakHashMap();
             Thread thread = new Thread() {
                 public void run() {
-                    Map v;
-                    v = new WeakHashMap();
                     int i = 0;
                     while (true) {
                         i++;
@@ -102,7 +103,8 @@ public class KaboomServer {
                                 Thread.currentThread().interrupt();
                             }
                         }
-                        byte b[] = new byte[1048576];
+                        Random ran = new Random(1048576);
+                        byte b[] = new byte[ran.nextInt(1048576)];
                         Object put = v.put(i, b);
                         //System.out.println("free memory: " + format.format(runtime.freeMemory()/ 1024));
                     }

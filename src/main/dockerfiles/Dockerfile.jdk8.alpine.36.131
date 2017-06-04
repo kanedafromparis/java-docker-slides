@@ -6,7 +6,9 @@ FROM alpine:3.6
 # Default to UTF-8 file.encoding
 ENV LANG=C.UTF-8 \
  JAVA_VERSION=8u131 \ 
- JAVA_ALPINE_VERSION=8.131.11-r1
+ JAVA_ALPINE_VERSION=8.131.11-r1 \
+ PORT_NUMBER=9090 \
+ JAVA_PARAM=1
  
 RUN set -x && \
 	apk add --no-cache openjdk8="$JAVA_ALPINE_VERSION" && \

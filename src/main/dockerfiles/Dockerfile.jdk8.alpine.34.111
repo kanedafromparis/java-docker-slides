@@ -8,7 +8,7 @@ ENV LANG=C.UTF-8 \
  JAVA_VERSION=8u111 \ 
  JAVA_ALPINE_VERSION=8.111.14-r0 \
  PORT_NUMBER=9090 \
- COYOTE_STAGE=1
+ JAVA_PARAM=1
  
 RUN set -x && \
 	apk add --no-cache openjdk8="$JAVA_ALPINE_VERSION" && \

@@ -37,9 +37,9 @@ function printHelp(){
   print("    desription....");
   print("    --image [1,2,....]");
   print("    desription....");
-  print("    --stage [1,2,....]");
+  print("    --docker-param [1,2,....]");
   print("    desription....");
-  print("    --test [1,2,....]");
+  print("    --java-param [1,2,....]");
   print("    desription....");
 }
 
@@ -55,7 +55,9 @@ function build(dockerfile, dockerfileFolder){
 function run(param, dockerfile, test){
   var dockertag = dockerfile.toLowerCase();;
   // remember that you do not use --rm
-  var cmd = "docker run -it "+param+" -p 9090:9090 -p 2020:2020 -e \"COYOTE_STAGE="+test+"\" "+dockertag+" ";
+  //var cmd = "docker run -it "+param+" -p 9090:9090 -p 2020:2020 -e \"JAVA_PARAM="+test+"\" "+dockertag+" ";
+  var cmd = "docker run -it "+param+" -p 9090:9090 -e \"JAVA_PARAM="+test+"\" "+dockertag+" ";
+
   print("cmd:\n " + cmd);
   
   print("  for i in {1..100} ; do curl http://$(docker-machine ip demo-jvm):9090/kaboom ; date ; done");
@@ -90,7 +92,7 @@ function getImage(image) {
   }
 }
 
-function getStageParamImage(image){
+function getDockerParam(image){
   
   switch(stage) {
     case "0":
@@ -140,11 +142,11 @@ if (arg0 == null || arg0 == "-h" || arg0 == "--help"){
 }else if (arg0 === "--action" && 
   action === "run" &&
   arg2 === "--image" && 
-  arg4 === "--stage" && 
-  arg6 === "--test"){
+  arg4 === "--docker-param" && 
+  arg6 === "--java-param"){
   
   if (isNumber(test)){
-    run(getStageParamImage(stage), getImage(image), test)
+    run(getDockerParam(stage), getImage(image), test)
   }else{
     printHelp();
   }

@@ -5,6 +5,7 @@ FROM centos:7.3.1611
 
 # Default to UTF-8 file.encoding
 ENV LANG=C.UTF-8 \
+ JAVA_PARAM="" \
  PORT_NUMBER=9090 
  
 RUN set -x && \

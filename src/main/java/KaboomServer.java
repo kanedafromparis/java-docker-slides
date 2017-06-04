@@ -7,10 +7,8 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
 import java.text.NumberFormat;
-import java.util.List;
 import java.util.Map;
 import java.util.Random;
-import java.util.Vector;
 import java.util.WeakHashMap;
 
 public class KaboomServer {
@@ -29,7 +27,8 @@ public class KaboomServer {
         System.out.println("Kabooum app listening on port " + port);
 // end::start-server[]
     }
-    static final Map v = new WeakHashMap();
+    static final Map m = new WeakHashMap();
+    
     
     static class KRootHandler implements HttpHandler {
 
@@ -90,9 +89,9 @@ public class KaboomServer {
             //static final Map v = new WeakHashMap();
             Thread thread = new Thread() {
                 public void run() {
-                    int i = 0;
+                    int i = 0,j = 0;
                     while (true) {
-                        i++;
+                        i++;j++;
                         if (i > 10000) {
                             i = 0;
                             // the Thread.sleep is here in order to allows
@@ -104,9 +103,12 @@ public class KaboomServer {
                             }
                         }
                         Random ran = new Random(10);
-                        byte b[] = new byte[ran.nextInt(15)*12000];
-                        Object put = v.put(i, b);
-                        //System.out.println("free memory: " + format.format(runtime.freeMemory()/ 1024));
+                        byte b[] = new byte[ran.nextInt(15)*12000000];
+                        Object put = m.put(j, b);
+                        //l.add(b);
+                        //l2.add(b);
+                        System.out.println(j+" - free maxmemory : " + format.format(runtime.maxMemory()/ 1024));
+                        System.out.println(j+" - free memory    : " + format.format(runtime.freeMemory()/ 1024));
                     }
                 }
             };

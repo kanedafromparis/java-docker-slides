@@ -3,20 +3,20 @@
 #
 # reminder : docker run --rm -t -i pj170613-01 /bin/sh
 #
+# export JAVA_HOME=$(/usr/libexec/java_home -v 1.8)
 #
-#
-# docker-machine create --driver virtualbox  --virtualbox-cpu-count "4" --virtualbox-memory "4089" --virtualbox-boot2docker-url boot2docker-v1.9.0.iso demo-jvm
+# docker-machine create --driver virtualbox  --virtualbox-cpu-count "4" --virtualbox-memory "4089" --virtualbox-boot2docker-url boot2docker-v1.12.5.iso demo-jvm
 # docker export 07f1f3f02e14 | tar tvf - | grep -C 2 var/dump/
 # DOCKERIMGID=`docker ps -alq` && docker cp $DOCKERIMGID:/var/dump .
 # DOCKERIMGID=`docker ps -alq` && docker inspect $DOCKERIMGID | jq .[0].State
 # http://tldp.org/LDP/abs/html/exitcodes.html
 # 
-# curl http://$(docker-machine ip demo-jvm):9093/kaboom-ah-ah-ah 
+# curl http://$(docker-machine ip demo-jvm):9093/kaboom
 # export TERM=linux && top
 #
 # 
 
-var dockerfileFolder = "../../../src/main/dockerfiles";
+var dockerfileFolder = "./src/main/dockerfiles";
 
 
 var arg0 = arguments[0];
@@ -30,6 +30,7 @@ var test = arguments[7];
 
 function printHelp(){
   print("This script is use to build various docker image");
+  print("It should run form the root maven project");
   print("usage :");
   print("jjs <files> [<arguments>]");
   print("    --action [build, run]");
@@ -40,15 +41,13 @@ function printHelp(){
   print("    desription....");
   print("    --test [1,2,....]");
   print("    desription....");
-
-  
 }
 
 
 function build(dockerfile, dockerfileFolder){
   var dockertag = dockerfile.toLowerCase();
-  var cmd = "docker build -t "+dockertag+" -f "+dockerfileFolder+"/"+dockerfile+" ../../../";
-  print("cmd: " + cmd);
+  var cmd = "docker build -t "+dockertag+" -f "+dockerfileFolder+"/"+dockerfile+" .";
+  print("cmd:\n " + cmd);
   var System = Java.type("java.lang.System");
   $EXEC(cmd, System.in, System.out, System.err);
 }
@@ -57,11 +56,15 @@ function run(param, dockerfile, test){
   var dockertag = dockerfile.toLowerCase();;
   // remember that you do not use --rm
   var cmd = "docker run -it "+param+" -p 9090:9090 -p 2020:2020 -e \"COYOTE_STAGE="+test+"\" "+dockertag+" ";
-  print("cmd: " + cmd);
+  print("cmd:\n " + cmd);
+  
+  print("  for i in {1..100} ; do curl http://$(docker-machine ip demo-jvm):9090/kaboom ; date ; done");
+  
   var System = Java.type("java.lang.System");
-  //@todo get ip from docker-machine
-  print("curl http://192.168.99.43:9090/kaboom ");
   $EXEC(cmd, System.in, System.out, System.err);
+  
+  print("DOCKERIMGID=`docker ps -alq` && docker inspect $DOCKERIMGID | jq .[0].State");
+  
 }
 
 function getImage(image) {
@@ -73,11 +76,9 @@ function getImage(image) {
         return "Dockerfile.jdk8.alpine.36.131";
         
     case "2":
-        //@todo centos version 111
         return "Dockerfile.jdk8.centos.111";
         
     case "3":
-        //@todo centos version 131
         return "Dockerfile.jdk8.centos.131";
         
     case "4":
@@ -106,19 +107,11 @@ function getStageParamImage(image){
         
     case "3":
         print("@Todo display the variante ");
-        return "-m 256M --memory-swap 125m";
+        return "-m 512M --memory-swap -1";
 
     case "4":
         print("@Todo display the variante ");
-        return "-m 256M --memory-swap 256m";
-        
-    case "5":
-        print("@Todo display the variante ");
-        return "-m 256M --memory-swap -1";
-
-    case "6":
-        print("@Todo display the variante ");
-        return "-m 512M --memory-reservation 200M --memory-swap -1";
+        return "-m 512M --memory-reservation 256M --memory-swap -1";
         
         
     default:

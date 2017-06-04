@@ -34,17 +34,14 @@ public class KaboomServer {
         @Override
         public void handle(HttpExchange t) throws IOException {
             String path = t.getRequestURI().getPath().trim();
-            if (path.equals("/")
-                    || path.contains("..")) {
-                getDefaultPage(t);
-                return;
-            }
 
             if (path.equals("/kaboom")) {
                 getKaboomPage(t);
                 return;
             }
             System.out.println("[access] " + path);
+            getDefaultPage(t);
+            return;
 
         }
 

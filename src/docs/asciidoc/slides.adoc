@@ -13,7 +13,7 @@ image::akira-java-docker.jpg[scaledwidth=55%]
 == Disclaimer
 
 [medium]
-Le code et les situations de ce récit étant purement fictifs, toute ressemblance avec des personnes ou des situations existantes ou ayant existé ne saurait être que fortuite ;-)
+Le code et les situations de ce récit étant purement fictifs, toute ressemblance avec des personnes ou des situations existantes ou ayant existées ne saurait être que fortuite ;-)
  
 [NOTE.speaker]
 --
@@ -26,11 +26,13 @@ To do
 |======================
 |Jean-Christophe Sirot |Charles Sabourdin
 a|image::JcSirot-02.png[scaledwidth=65%]         a|image::CaSabourdin-02.png[scaledwidth=65%]
-|Tech lead chez Weborama        a|Architect chez IPPON technologies
+|Tech lead chez Weborama        a|Architecte chez IPPON technologies
 |       | 
 |======================
 
 == My microservice
+
+image::projetCoyote.png[]
 
 === Simple server
 
@@ -73,7 +75,11 @@ docker run -it -p 9090:9090 \
 [source,bash,medium]
 curl http://$(docker-machine ip demo-jvm):9090/kaboom
 
+=== Everything OK!
 
+Lets push the docker image
+
+image::acmeBox.jpg[scaledwidth=70%]
 
 == Let's move to prod...
 
@@ -190,6 +196,8 @@ CAS : OMKill ;-)
 
 
 == What the ....
+
+image::helpCoyote.jpg[]
 
 === Something to remember 
 

@@ -4,8 +4,6 @@
 #
 #
 
-JVM_OPTIONS=" ";
-
 case $JAVA_PARAM in
  	0) JVM_OPTIONS=" " ;;
  	1) JVM_OPTIONS=" -Xms256M -Xmx256M " ;;

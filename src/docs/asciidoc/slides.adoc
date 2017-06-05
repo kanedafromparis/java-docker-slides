@@ -54,8 +54,7 @@ include::{sourcedir}/KaboomServer.java[tags=memory-monger,indent=0]
 
 [source,java,medium]
 .local test ;-)
-  cd $PROJECT/target/classes && \
-java KaboomServer 9090 
+java -cp target/classes KaboomServer 9090
 
 [source,bash,medium]
 curl http://127.0.0.1:9090/kaboom
@@ -64,11 +63,11 @@ curl http://127.0.0.1:9090/kaboom
 
 [source,java,medium]
 .on docker
-  # docker-machine create --driver virtualbox demo-jvm ; \
-eval $(docker-machine env demo-jvm) && \
-cd $PROJECT/ && \
-docker build -t dockerfile.jdk8.alpine.34.111 -f
-./src/main/dockerfiles/Dockerfile.jdk8.alpine.34.111 ./ &&
+//  # docker-machine create --driver virtualbox demo-jvm ; \
+// eval $(docker-machine env demo-jvm) && \
+// cd $PROJECT/ && \
+// docker build -t dockerfile.jdk8.alpine.34.111 -f
+// ./src/main/dockerfiles/Dockerfile.jdk8.alpine.34.111 ./ &&
 docker run -it -p 9090:9090 \
 -e "JAVA_PARAM=0" dockerfile.jdk8.alpine.34.111
 
@@ -89,8 +88,8 @@ image::coyote-plan.jpg[scaledwidth=70%]
 
 start n docker with 256M (this is production, ressources are shared ;-)
   
-[source,bash,medium]
- ./src/main/demoscript/coyote.js --action run --image 0 --docker-param 1 --java-param 0
+// [source,bash,medium]
+// ./src/main/demoscript/coyote.js --action run --image 0 --docker-param 1 --java-param 0
    
 [source,java,medium]
 docker run -it -m 256M -p 9090:9090 -e "JAVA_PARAM=0" dockerfile.jdk8.alpine.34.111
@@ -108,8 +107,8 @@ Please production increase ram to the docker it has been "OOMKilled"
 === increase the RAM ;-)
 
 
-[source,java,medium]
-  ./src/main/demoscript/coyote.js --action run --image 0 --docker-param 2 --java-param 0
+// [source,java,medium]
+//  ./src/main/demoscript/coyote.js --action run --image 0 --docker-param 2 --java-param 0
    
 [source,java,medium]
 docker run -it -m 512M -p 9090:9090 -e "JAVA_PARAM=0" dockerfile.jdk8.alpine.34.111
@@ -125,11 +124,11 @@ CAS : It still crash that't you code dude, please set Xmx correctly...
 === set -Xms256M -Xmx512M
 
 
-[source,java,medium]
-  ./src/main/demoscript/coyote.js --action run --image 0 --docker-param 2 --java-param 1
+// [source,java,medium]
+//  ./src/main/demoscript/coyote.js --action run --image 0 --docker-param 2 --java-param 2
   
 [source,java,medium]
-docker run -it -m 512M -p 9090:9090 -e "JAVA_PARAM=0" dockerfile.jdk8.alpine.34.111
+docker run -it -m 512M -p 9090:9090 -e "JAVA_PARAM=2" dockerfile.jdk8.alpine.34.111
     
 [source,java,medium]
 java  -Xms256M -Xmx512M  KaboomServer 9090
@@ -143,11 +142,11 @@ CAS : It still does not crash but gosh it swap so much, and if crahs sometime
 === Something that never happen ;-)
 
 
-[source,java,medium]
-  ./src/main/demoscript/coyote.js --action run --image 0 --docker-param 2 --java-param 2
+// [source,java,medium]
+//  ./src/main/demoscript/coyote.js --action run --image 0 --docker-param 2 --java-param 2
 
 [source,java,medium]
-docker run -it -m 512M -p 9090:9090 -e "JAVA_PARAM=0" dockerfile.jdk8.alpine.34.111
+docker run -it -m 512M -p 9090:9090 -e "JAVA_PARAM=3" dockerfile.jdk8.alpine.34.111
     
 [source,java,medium]
 java -Xms512M -Xmx1024M  KaboomServer 9090
@@ -161,8 +160,8 @@ CAS : In fact, this will fill the swap, but in order to show it, we will increas
 === It swap too much ? Let's remove it
 
 
-[source,java,medium]
- ./src/main/demoscript/coyote.js --action run --image 0 --docker-param 3 --java-param 3
+// [source,java,medium]
+// ./src/main/demoscript/coyote.js --action run --image 0 --docker-param 3 --java-param 3
   
 [source,java,medium]
 docker run -it -m 512M --memory-swap -1 -p 9090:9090 -e "JAVA_PARAM=3" dockerfile.jdk8.alpine.34.111
@@ -175,24 +174,25 @@ java -Xms1024M -Xmx3584M  KaboomServer 9090
 CAS : In fact, this will still fill the swap, but in order to show it, we will increase the -Xmx
 --
 
-=== The hard way
+=== Hey, dude, read the doc ;-)
 
-[source,bash,medium]
-sudo swapoff -a
+// [source,bash,medium]
+// sudo swapon -a
 
+//[source,java,medium]
+// ./src/main/demoscript/coyote.js --action run --image 0 --docker-param 3 --java-param 3
+  
 [source,java,medium]
- ./src/main/demoscript/coyote.js --action run --image 0 --docker-param 3 --java-param 3
-
-[source,java,medium]
-docker run -it -m 512M --memory-swap -1 -p 9090:9090 -e "JAVA_PARAM=3" dockerfile.jdk8.alpine.34.111
+docker run -it -m 512M --memory-swap 515M -p 9090:9090 -e "JAVA_PARAM=3" dockerfile.jdk8.alpine.34.111
    
 [source,java,medium]
 java -Xms1024M -Xmx3584M  KaboomServer 9090
 
 [NOTE.speaker]
 --
-CAS : OMKill ;-)
+CAS : In fact, this will still fill the swap, but in order to show it, we will increase the -Xmx
 --
+
 
 
 == What the ....
@@ -222,80 +222,80 @@ CAS : think /proc..., think maloc
 CAS : think /proc..., think maloc 
 --
 
+=== JVM in a Dockerland 
+
+@todo draw the vm memory guest
+
+=== JVM in a Dockerland 
+
+@todo draw the vm memory guest
+
+
+
 === What can we do
 
- * tune the Xmx
- * use jdk9
- * use jdk8 > 131
+== Tune your Xmx
+
+//image::http://blog.christianposta.com/images/fabric8_logo.svg[]
+
 
 
 [NOTE.speaker]
 --
 CAS : ressources problem
-Please production increase ram to the docker it has been "OOMKilled"
+https://github.com/fabric8io-images/java/blob/master/images/jboss/openjdk8/jdk/container-limits
+
 --
+
+== use jdk9
+
+https://github.com/fabric8io-images/java/blob/master/images/jboss/openjdk8/jdk/container-limits
+
 
 == ExperimentalVMOptions
 
 image::emclume.jpg[scaledwidth=70%]
 
-=== ExperimentalVMOptions
-
- * -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap
- * -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -XX:MaxRAMFraction=1
- 
-
-[NOTE.speaker]
---
-CAS : It's experimental, use canary dev ;-)
---
-
 === -XX:+UseCGroupMemoryLimitForHeap
 
- 
-[source,java,medium]
- ./src/main/demoscript/coyote.js --action run --image 2 --docker-param 3 --java-param 3
+//[source,java,medium]
+// ./src/main/demoscript/coyote.js --action run --image 1 --docker-param 2 --java-param 20
+
 [source,java,medium] 
-docker run -it -m 512M --memory-swap -1 -p 9090:9090 \
- -e "JAVA_PARAM=7" dockerfile.jdk8.alpine.36.131
+docker run -it -m 512M -p 9090:9090 -e "JAVA_PARAM=20" \
+ dockerfile.jdk8.alpine.36.131
 
 [source,java,medium]   
-java -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap \
--XshowSettings:vm KaboomServer 9090
+cmd : java  -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -XshowSettings:vm  KaboomServer 9090
+
+=== Bewarw Xmx do override
+
+//[source,java,medium]
+// ./src/main/demoscript/coyote.js --action run --image 1 --docker-param 2 --java-param 21
+
+[source,java,medium] 
+docker run -it -m 512M -p 9090:9090 -e "JAVA_PARAM=21" \
+ dockerfile.jdk8.alpine.36.131
+
+[source,java,medium]   
+cmd : java  -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -XX:MaxRAMFraction=1 -XshowSettings:vm  KaboomServer 9090
     
 
-=== -XX:MaxRAMFraction=1
 
-[source,java,medium]
-  ./src/main/demoscript/coyote.js --action run --image 2 --docker-param 3 --java-param 3
+=== thinks -XX:MaxRAMFraction=1
+
+//[source,java,medium]
+//  ./src/main/demoscript/coyote.js --action run --image 1 --docker-param 2 --java-param 22
   
 [source,java,medium]
-docker run -it -m 512M --memory-swap -1 -p 9090:9090 \
- -e "JAVA_PARAM=9" dockerfile.jdk8.alpine.36.131
+docker run -it -m 512M  -p 9090:9090 \
+ -e "JAVA_PARAM=22" dockerfile.jdk8.alpine.36.131
 
 [source,java,medium]  
 java -XX:+UnlockExperimentalVMOptions \
  -XX:+UseCGroupMemoryLimitForHeap -XX:MaxRAMFraction=1 \
  -XshowSettings:vm KaboomServer 9090
 
-=== -XX:MaxRAMFraction=2
-
-[source,java,medium]
-  ./src/main/demoscript/coyote.js --action run --image 2 --docker-param 3 --java-param 3
-  
-[source,java,medium]
-docker run -it -m 512M --memory-swap -1 -p 9090:9090 \
- -e "JAVA_PARAM=11" dockerfile.jdk8.alpine.36.131
-
-[source,java,medium]
-java -XX:+UnlockExperimentalVMOptions \
- -XX:+UseCGroupMemoryLimitForHeap -XX:MaxRAMFraction=2 \
- -XshowSettings:vm KaboomServer 9090
-
-[NOTE.speaker]
---
-CAS : It's experimental, use canary dev ;-)
---
 
 == Take away
 
@@ -308,6 +308,16 @@ CAS :
  - Docker is not VM
  - Let docker deal with ressource management
 --
+
+=== memory should have only one master
+
+
+=== some useful -X options
+
+
+=== you shoudl alway have 3 elements at least ;-)
+
+
 
 == Questions
 

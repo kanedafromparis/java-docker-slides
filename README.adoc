@@ -33,7 +33,7 @@ Open the file _target/generated-slides/slides.html_ in your browser to see the g
 
 == to build all the dockerimages
 
- $ for i in {0..5} ; do ./src/main/demoscript/coyote.js --action build --image $i; done;
+ $ for i in {0..4} ; do ./src/main/demoscript/coyote.js --action build --image $i; done;
 
 == Tu use local server for the presentation 
  $ java -cp target/classes Server ${httpPort}

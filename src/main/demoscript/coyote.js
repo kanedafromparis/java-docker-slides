@@ -4,6 +4,8 @@
 # reminder : docker run --rm -t -i pj170613-01 /bin/sh
 #
 # export JAVA_HOME=$(/usr/libexec/java_home -v 1.8)
+# @todo
+# export JAVA_HOME=$(/usr/libexec/java_home -v 1.9)
 #
 # docker-machine create --driver virtualbox  --virtualbox-cpu-count "4" --virtualbox-memory "4089" --virtualbox-boot2docker-url boot2docker-v1.12.5.iso demo-jvm
 # docker export 07f1f3f02e14 | tar tvf - | grep -C 2 var/dump/
@@ -18,15 +20,15 @@
 
 var dockerfileFolder = "./src/main/dockerfiles";
 
-
-var arg0 = arguments[0];
-var action = arguments[1];
-var arg2 = arguments[2];
-var image = arguments[3];
-var arg4 = arguments[4];
-var stage = arguments[5];
-var arg6 = arguments[6];
-var test = arguments[7];
+var i=0;
+var arg0 = arguments[i++];
+var action = arguments[i++];
+var arg2 = arguments[i++];
+var image = arguments[i++];
+var arg4 = arguments[i++];
+var stage = arguments[i++];
+var arg6 = arguments[i++];
+var test = arguments[i++];
 
 function printHelp(){
   print("This script is use to build various docker image");
@@ -46,7 +48,7 @@ function printHelp(){
 
 function build(dockerfile, dockerfileFolder){
   var dockertag = dockerfile.toLowerCase();
-  var cmd = "docker build -t "+dockertag+" -f "+dockerfileFolder+"/"+dockerfile+" .";
+  var cmd = "docker build -t "+dockertag+" -f "+dockerfileFolder+"/"+dockerfile+" ./ ";
   print("cmd:\n " + cmd);
   var System = Java.type("java.lang.System");
   $EXEC(cmd, System.in, System.out, System.err);
@@ -63,6 +65,7 @@ function run(param, dockerfile, test){
   print("  for i in {1..100} ; do curl http://$(docker-machine ip demo-jvm):9090/kaboom ; date ; done");
   
   var System = Java.type("java.lang.System");
+  
   $EXEC(cmd, System.in, System.out, System.err);
   
   print("DOCKERIMGID=`docker ps -alq` && docker inspect $DOCKERIMGID | jq .[0].State");
@@ -106,15 +109,21 @@ function getDockerParam(image){
     case "2":
         print("@Todo display the variante ");
         return "-m 512M";
-        
-    case "3":
-        print("@Todo display the variante ");
-        return "-m 512M --memory-swap -1";
 
+    case "3":
+        print("The host will consume all it's swap");
+        return "-m 512M --memory-swap -1";    
+        
     case "4":
+        print("The host should not be able to use more then 10 M of swap");
+        return "-m 512M --memory-swap 522M";
+
+    
+
+    case "99":
         print("@Todo display the variante ");
         return "-m 512M --memory-reservation 256M --memory-swap -1";
-        
+
         
     default:
         print("no such docker stage value using default");
@@ -154,7 +163,7 @@ if (arg0 == null || arg0 == "-h" || arg0 == "--help"){
 }else{
     printHelp();
 }
-
+//print(`ls -l`)
 // print("--- arg0    --- "+arg0);
 // print("--- action  --- "+action);
 // print("--- arg2    --- "+arg2);

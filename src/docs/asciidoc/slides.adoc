@@ -249,7 +249,6 @@ https://github.com/fabric8io-images/java/blob/master/images/jboss/openjdk8/jdk/c
 
 == use jdk9
 
-https://github.com/fabric8io-images/java/blob/master/images/jboss/openjdk8/jdk/container-limits
 
 
 == ExperimentalVMOptions

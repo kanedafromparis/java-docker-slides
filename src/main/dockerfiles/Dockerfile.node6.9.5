@@ -16,6 +16,10 @@ RUN set -x && \
 
 COPY ./src/main/nodejs/ /opt/kaboom
 
+RUN adduser beepbeep -D && \
+  chgrp beepbeep /opt/kaboom && \
+  chmod -R g+rwX /opt/kaboom  
+
 WORKDIR /opt/kaboom
 
 #ENTRYPOINT ["/bin/sh"]

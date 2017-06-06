@@ -57,8 +57,8 @@ function build(dockerfile, dockerfileFolder){
 function run(param, dockerfile, test){
   var dockertag = dockerfile.toLowerCase();;
   // remember that you do not use --rm
-  //var cmd = "docker run -it "+param+" -p 9090:9090 -p 2020:2020 -e \"JAVA_PARAM="+test+"\" "+dockertag+" ";
-  var cmd = "docker run -it "+param+" -p 9090:9090 -e \"JAVA_PARAM="+test+"\" "+dockertag+" ";
+  //var cmd = "docker run -it "+param+" -p 9090:9090 -p 2020:2020 -e \"JAVA_PARAMS="+test+"\" "+dockertag+" ";
+  var cmd = "docker run -it "+param+" -p 9090:9090 -e \"JAVA_PARAMS="+test+"\" "+dockertag+" ";
 
   print("cmd:\n " + cmd);
   
@@ -87,7 +87,8 @@ function getImage(image) {
         return "Dockerfile.jdk8.centos.131";
         
     case "4":
-        return "Dockerfile.jdk8.alpine.34.111";        
+        print("only for builds");
+        return "Dockerfile.node6.9.5";        
 
       default:
         print("no such image value using default");

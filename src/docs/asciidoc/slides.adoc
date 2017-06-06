@@ -69,7 +69,7 @@ curl http://127.0.0.1:9090/kaboom
 // docker build -t dockerfile.jdk8.alpine.34.111 -f
 // ./src/main/dockerfiles/Dockerfile.jdk8.alpine.34.111 ./ &&
 docker run -it -p 9090:9090 \
--e "JAVA_PARAM=0" dockerfile.jdk8.alpine.34.111
+ dockerfile.jdk8.alpine.34.111
 
 [source,bash,medium]
 curl http://$(docker-machine ip demo-jvm):9090/kaboom
@@ -92,7 +92,7 @@ start n docker with 256M (this is production, ressources are shared ;-)
 // ./src/main/demoscript/coyote.js --action run --image 0 --docker-param 1 --java-param 0
    
 [source,java,medium]
-docker run -it -m 256M -p 9090:9090 -e "JAVA_PARAM=0" dockerfile.jdk8.alpine.34.111
+docker run -it -m 256M -p 9090:9090 dockerfile.jdk8.alpine.34.111
    
 [source,java,medium]
 java  KaboomServer 9090
@@ -111,7 +111,7 @@ Please production increase ram to the docker it has been "OOMKilled"
 //  ./src/main/demoscript/coyote.js --action run --image 0 --docker-param 2 --java-param 0
    
 [source,java,medium]
-docker run -it -m 512M -p 9090:9090 -e "JAVA_PARAM=0" dockerfile.jdk8.alpine.34.111
+docker run -it -m 512M -p 9090:9090 dockerfile.jdk8.alpine.34.111
     
 [source,java,medium]
 java  KaboomServer 9090
@@ -128,7 +128,7 @@ CAS : It still crash that't you code dude, please set Xmx correctly...
 //  ./src/main/demoscript/coyote.js --action run --image 0 --docker-param 2 --java-param 2
   
 [source,java,medium]
-docker run -it -m 512M -p 9090:9090 -e "JAVA_PARAM=2" dockerfile.jdk8.alpine.34.111
+docker run -it -m 512M -p 9090:9090 -e "JAVA_PARAMS=2" dockerfile.jdk8.alpine.34.111
     
 [source,java,medium]
 java  -Xms256M -Xmx512M  KaboomServer 9090
@@ -146,7 +146,7 @@ CAS : It still does not crash but gosh it swap so much, and if crahs sometime
 //  ./src/main/demoscript/coyote.js --action run --image 0 --docker-param 2 --java-param 2
 
 [source,java,medium]
-docker run -it -m 512M -p 9090:9090 -e "JAVA_PARAM=3" dockerfile.jdk8.alpine.34.111
+docker run -it -m 512M -p 9090:9090 -e "JAVA_PARAMS=3" dockerfile.jdk8.alpine.34.111
     
 [source,java,medium]
 java -Xms512M -Xmx1024M  KaboomServer 9090
@@ -164,10 +164,10 @@ CAS : In fact, this will fill the swap, but in order to show it, we will increas
 // ./src/main/demoscript/coyote.js --action run --image 0 --docker-param 3 --java-param 3
   
 [source,java,medium]
-docker run -it -m 512M --memory-swap -1 -p 9090:9090 -e "JAVA_PARAM=3" dockerfile.jdk8.alpine.34.111
+docker run -it -m 512M --memory-swap -1 -p 9090:9090 -e "JAVA_PARAMS=3" dockerfile.jdk8.alpine.34.111
    
 [source,java,medium]
-java -Xms1024M -Xmx3584M  KaboomServer 9090
+java Xms512M -Xmx1024M  KaboomServer 9090
 
 [NOTE.speaker]
 --
@@ -183,10 +183,10 @@ CAS : In fact, this will still fill the swap, but in order to show it, we will i
 // ./src/main/demoscript/coyote.js --action run --image 0 --docker-param 3 --java-param 3
   
 [source,java,medium]
-docker run -it -m 512M --memory-swap 515M -p 9090:9090 -e "JAVA_PARAM=3" dockerfile.jdk8.alpine.34.111
+docker run -it -m 512M --memory-swap 515M -p 9090:9090 -e "JAVA_PARAMS=3" dockerfile.jdk8.alpine.34.111
    
 [source,java,medium]
-java -Xms1024M -Xmx3584M  KaboomServer 9090
+java Xms512M -Xmx1024M  KaboomServer 9090
 
 [NOTE.speaker]
 --
@@ -261,7 +261,7 @@ image::emclume.jpg[scaledwidth=70%]
 // ./src/main/demoscript/coyote.js --action run --image 1 --docker-param 2 --java-param 20
 
 [source,java,medium] 
-docker run -it -m 512M -p 9090:9090 -e "JAVA_PARAM=20" \
+docker run -it -m 512M -p 9090:9090 -e "JAVA_PARAMS=20" \
  dockerfile.jdk8.alpine.36.131
 
 [source,java,medium]   
@@ -273,7 +273,7 @@ cmd : java  -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -X
 // ./src/main/demoscript/coyote.js --action run --image 1 --docker-param 2 --java-param 21
 
 [source,java,medium] 
-docker run -it -m 512M -p 9090:9090 -e "JAVA_PARAM=21" \
+docker run -it -m 512M -p 9090:9090 -e "JAVA_PARAMS=21" \
  dockerfile.jdk8.alpine.36.131
 
 [source,java,medium]   
@@ -288,7 +288,7 @@ cmd : java  -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -X
   
 [source,java,medium]
 docker run -it -m 512M  -p 9090:9090 \
- -e "JAVA_PARAM=22" dockerfile.jdk8.alpine.36.131
+ -e "JAVA_PARAMS=22" dockerfile.jdk8.alpine.36.131
 
 [source,java,medium]  
 java -XX:+UnlockExperimentalVMOptions \

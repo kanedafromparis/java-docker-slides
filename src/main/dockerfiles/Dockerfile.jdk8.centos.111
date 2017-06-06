@@ -5,12 +5,14 @@ FROM centos:7.3.1611
 
 # Default to UTF-8 file.encoding
 ENV LANG=C.UTF-8 \
- JAVA_PARAM="" \
- JVM_OPTIONS="" \
- PORT_NUMBER=9090 
+    JAVA_VERSION=8u111 \ 
+    JAVA_CENTOS_VERSION=1.8.0.111-2.b15.el7_3 \
+    JAVA_PARAMS="0" \
+    JVM_OPTIONS="" \
+    PORT_NUMBER=9090 
  
 RUN set -x && \
-	yum -y update && \
+  adduser beepbeep && \
 	mkdir -p /opt/kaboom && \
 	mkdir -p /var/dump
 	
@@ -18,15 +20,14 @@ RUN set -x && \
 COPY ./src/main/java/KaboomServer.java /opt/kaboom
 COPY ./src/main/dockerfiles/bash/coyote.sh /opt/kaboom
 
+RUN chgrp beepbeep /opt/kaboom && \
+  chmod -R g+rwX /opt/kaboom  && \
+	chgrp beepbeep /var/dump && \
+	chmod -R g+rwX /var/dump 
+
 WORKDIR /opt/kaboom
 
-#ENTRYPOINT ["/bin/sh"]
-
-# Default to UTF-8 file.encoding
-ENV JAVA_VERSION=8u131 \ 
-    JAVA_CENTOS_VERSION=1.8.0.111-2.b15.el7_3 
- 
-RUN yum -y install java-1.8.0-openjdk-devel-$JAVA_CENTOS_VERSION java-1.8.0-openjdk-headless-$JAVA_CENTOS_VERSION
+RUN yum install -y java-1.8.0-openjdk-devel-$JAVA_CENTOS_VERSION
 
 RUN cd /opt/kaboom && \
    chmod a+x /opt/kaboom/coyote.sh && \
@@ -34,5 +35,7 @@ RUN cd /opt/kaboom && \
 
 EXPOSE 9090
 EXPOSE 2020
+
+USER beepbeep
 
 CMD ["/opt/kaboom/coyote.sh"]

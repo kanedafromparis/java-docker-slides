@@ -9,20 +9,24 @@ ENV LANG=C.UTF-8 \
  JAVA_ALPINE_VERSION=8.131.11-r1 \
  JVM_OPTIONS="" \
  PORT_NUMBER=9090 \
- JAVA_PARAM=1
+ JAVA_PARAMS="0"
  
 RUN set -x && \
-	apk add --no-cache openjdk8="$JAVA_ALPINE_VERSION" && \
-	mkdir -p /opt/kaboom && \
-	mkdir -p /var/dump
-	
+	adduser beepbeep -D && \
+	mkdir -p /opt/kaboom  && \
+	mkdir -p /var/dump && \
+  apk add --no-cache openjdk8="$JAVA_ALPINE_VERSION"
 
+	
 COPY ./src/main/java/KaboomServer.java /opt/kaboom
 COPY ./src/main/dockerfiles/bash/coyote.sh /opt/kaboom
 
-WORKDIR /opt/kaboom
+RUN chgrp beepbeep /opt/kaboom && \
+  chmod -R g+rwX /opt/kaboom  && \
+	chgrp beepbeep /var/dump && \
+	chmod -R g+rwX /var/dump 
 
-#ENTRYPOINT ["/bin/sh"]
+WORKDIR /opt/kaboom
 
 RUN cd /opt/kaboom && \
    chmod a+x /opt/kaboom/coyote.sh && \
@@ -30,5 +34,9 @@ RUN cd /opt/kaboom && \
 
 EXPOSE 9090
 EXPOSE 2020
+
+USER beepbeep
+
+#ENTRYPOINT ["/bin/sh"]
 
 CMD ["/opt/kaboom/coyote.sh"]

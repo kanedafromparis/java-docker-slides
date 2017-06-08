@@ -25,6 +25,7 @@ case $JAVA_PARAMS in
 
   100) JVM_OPTIONS=" -XX:NativeMemoryTracking=summary " ;;
   101) JVM_OPTIONS=" -XX:+PrintNMTStatistics -XX:+UnlockDiagnosticVMOptions -XX:NativeMemoryTracking=summary";;
+  102) JVM_OPTIONS=" -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -XX:ParallelGCThreads=4 -XshowSettings:vm " ;;
     
 	*) echo "INVALID NUMBER!" ;;
 esac

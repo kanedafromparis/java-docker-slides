@@ -14,8 +14,9 @@
 # http://tldp.org/LDP/abs/html/exitcodes.html
 # 
 # curl http://$(docker-machine ip demo-jvm):9093/kaboom
+# for i in {1..100} ; do curl http://$(docker-machine ip demo-jvm):9090/kaboom ; date ; done
 # export TERM=linux && top
-#
+# PS1="$"
 # 
 
 var dockerfileFolder = "./src/main/dockerfiles";
@@ -119,7 +120,9 @@ function getDockerParam(image){
         print("The host should not be able to use more then 10 M of swap");
         return "-m 512M --memory-swap 522M";
 
-    
+    case "5":
+        print("The host should not be able to use more then 10 M of swap and only 2 CPU");
+        return "-m 512M --cpuset-cpus=2	--memory-swap 522M";    
 
     case "99":
         print("@Todo display the variante ");

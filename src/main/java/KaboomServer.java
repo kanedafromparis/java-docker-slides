@@ -40,6 +40,10 @@ public class KaboomServer {
                 getKaboomPage(t);
                 return;
             }
+            if (path.equals("/")) {
+                getDefaultPage(t);
+                return;
+            }
             System.out.println("[access] " + path);
             getDefaultPage(t);
             return;
@@ -61,6 +65,7 @@ public class KaboomServer {
             sb.append("allocated memory: ").append(format.format(allocatedMemory / 1024)).append("<br/>");
             sb.append("max memory: ").append(format.format(maxMemory / 1024)).append("<br/>");
             sb.append("total free memory: ").append(format.format((freeMemory + (maxMemory - allocatedMemory)) / 1024)).append("<br/>");
+            sb.append("available processors : ").append(runtime.availableProcessors()).append("<br/>");            
             sb.append("</div></body></html>");
             System.out.println("[debug] " + sb.toString());
             t.sendResponseHeaders(200, sb.length());
@@ -77,8 +82,6 @@ public class KaboomServer {
          */
         private void getKaboomPage(HttpExchange t) throws IOException {
             OutputStream os = t.getResponseBody();
-            Runtime runtime = Runtime.getRuntime();
-            NumberFormat format = NumberFormat.getInstance();
             StringBuilder sb = new StringBuilder();
 
             sb.append("{\"title\":\"AH AH AH\", \"comment\":\"log at logs...\"}");

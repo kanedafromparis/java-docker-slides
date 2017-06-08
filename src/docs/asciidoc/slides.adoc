@@ -256,6 +256,8 @@ image::femal-costum.jpg[]
 
 === Tune your Xmx
 
+image::giphy-head-roller.gif[]
+
 [NOTE.speaker]
 --
 CAS : ressources problem
@@ -263,12 +265,15 @@ https://github.com/fabric8io-images/java/blob/master/images/jboss/openjdk8/jdk/c
 
 --
 
-=== use jdk9 ExperimentalVMOptions
+===  ExperimentalVMOptions
 
+jdk9 or jdk8 > 8u131
 
 image::emclume.jpg[scaledwidth=70%]
 
-=== -XX:+UseCGroupMemoryLimitForHeap
+=== Use cgroup 
+
+ -XX:+UseCGroupMemoryLimitForHeap
 
 //[source,java,medium]
 // ./src/main/demoscript/coyote.js --action run --image 1 --docker-param 2 --java-param 20
@@ -296,17 +301,40 @@ docker run -it -m 512M -p 9090:9090 \
 [source,java]
 java -XX:+UnlockExperimentalVMOptions \
      -XX:+UseCGroupMemoryLimitForHeap \
-     -XX:MaxRAMFraction=1 \
+     -Xms256M -Xmx512M \
      -XshowSettings:vm KaboomServer 9090
 
+=== thinks fraction 
 
-=== thinks -XX:MaxRAMFraction=1
+ -XX:MaxRAMFraction=1
 
 //[source,java,medium]
 //  ./src/main/demoscript/coyote.js --action run --image 1 --docker-param 2 --java-param 22
   
 [source,java]
 docker run -it -m 512M -p 9090:9090 \
+    -e "JAVA_PARAMS=22" \
+    dockerfile.jdk8.alpine.36.131
+
+[source,java]
+java -XX:+UnlockExperimentalVMOptions \
+     -XX:+UseCGroupMemoryLimitForHeap \
+     -XX:MaxRAMFraction=1 \
+     -XshowSettings:vm KaboomServer 9090
+
+=== by the way  
+
+  jvm will respect --cpuset-cpus 
+  unless you overide with 
+  -XX:ParallelGCThreads or -XX:CICompilerCount	
+
+  mais ...
+//[source,java,medium]
+//  ./src/main/demoscript/coyote.js --action run --image 1 --docker-param 5 --java-param 22
+  
+[source,java]
+docker run -it -m 512M \
+    --cpuset-cpus=2 -p 9090:9090 \
     -e "JAVA_PARAMS=22" \
     dockerfile.jdk8.alpine.36.131
 
@@ -340,7 +368,7 @@ VM settings:
     Ergonomics Machine Class: server
     Using VM: Java HotSpot(TM) 64-Bit Server VM
 
--XX:MaxMetaspaceSize
+// not know -XX:MaxMetaspaceSize
 
 === Memory Dump On Error
 

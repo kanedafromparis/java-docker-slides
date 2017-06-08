@@ -269,7 +269,7 @@ docker run -it -m 512M -p 9090:9090 -e "JAVA_PARAMS=20" \
 [source,java,medium]   
 cmd : java  -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -XshowSettings:vm  KaboomServer 9090
 
-=== Bewarw Xmx do override
+=== Beware Xmx do override
 
 //[source,java,medium]
 // ./src/main/demoscript/coyote.js --action run --image 1 --docker-param 2 --java-param 21
@@ -312,14 +312,28 @@ CAS :
 
 === memory should have only one master
 
+=== Show settings
 
-=== some useful -X options
+[source,java]
+-XshowSettings:vm
+VM settings:
+    Max. Heap Size (Estimated): 3.56G
+    Ergonomics Machine Class: server
+    Using VM: Java HotSpot(TM) 64-Bit Server VM
 
 -XX:MaxMetaspaceSize
 
 
 
-=== you shoudl alway have 3 elements at least ;-)
+=== Native Memory Tracking
+
+[source,java,medium]
+--XX:NativeMemoryTracking=summary
+jcmd <pid> VM.native_memory summary
+
+image::jcmd.png[]
+
+=== you should always have 3 elements at least ;-)
 
 
 

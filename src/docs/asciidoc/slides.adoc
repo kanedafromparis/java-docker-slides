@@ -36,7 +36,7 @@ image::projetCoyote.png[]
 
 === Simple server
 
-[source,java,medium]
+[source,java]
 .Java code from project
 ----
 include::{sourcedir}/KaboomServer.java[tags=start-server,indent=0]
@@ -52,26 +52,25 @@ include::{sourcedir}/KaboomServer.java[tags=memory-monger,indent=0]
 
 === Test on my machine
 
-[source,java,medium]
+[source,java]
 .local test ;-)
 java -cp target/classes KaboomServer 9090
 
-[source,bash,medium]
+[source,bash]
 curl http://127.0.0.1:9090/kaboom
 
 === Test on my docker machine
 
-[source,java,medium]
+[source,java]
 .on docker
 //  # docker-machine create --driver virtualbox demo-jvm ; \
 // eval $(docker-machine env demo-jvm) && \
 // cd $PROJECT/ && \
 // docker build -t dockerfile.jdk8.alpine.34.111 -f
 // ./src/main/dockerfiles/Dockerfile.jdk8.alpine.34.111 ./ &&
-docker run -it -p 9090:9090 \
- dockerfile.jdk8.alpine.34.111
+docker run -it -p 9090:9090 dockerfile.jdk8.alpine.34.111
 
-[source,bash,medium]
+[source,bash]
 curl http://$(docker-machine ip demo-jvm):9090/kaboom
 
 === Everything OK!
@@ -91,10 +90,11 @@ start n docker with 256M (this is production, ressources are shared ;-)
 // [source,bash,medium]
 // ./src/main/demoscript/coyote.js --action run --image 0 --docker-param 1 --java-param 0
    
-[source,java,medium]
-docker run -it -m 256M -p 9090:9090 dockerfile.jdk8.alpine.34.111
+[source,java]
+docker run -it -m 256M -p 9090:9090 \
+    dockerfile.jdk8.alpine.34.111
    
-[source,java,medium]
+[source,java]
 java  KaboomServer 9090
   
 
@@ -110,10 +110,11 @@ Please production increase ram to the docker it has been "OOMKilled"
 // [source,java,medium]
 //  ./src/main/demoscript/coyote.js --action run --image 0 --docker-param 2 --java-param 0
    
-[source,java,medium]
-docker run -it -m 512M -p 9090:9090 dockerfile.jdk8.alpine.34.111
+[source,java]
+docker run -it -m 512M -p 9090:9090 \
+    dockerfile.jdk8.alpine.34.111
     
-[source,java,medium]
+[source,java]
 java  KaboomServer 9090
 
 [NOTE.speaker]
@@ -127,11 +128,13 @@ CAS : It still crash that't you code dude, please set Xmx correctly...
 // [source,java,medium]
 //  ./src/main/demoscript/coyote.js --action run --image 0 --docker-param 2 --java-param 2
   
-[source,java,medium]
-docker run -it -m 512M -p 9090:9090 -e "JAVA_PARAMS=2" dockerfile.jdk8.alpine.34.111
+[source,java]
+docker run -it -m 512M -p 9090:9090 \
+    -e "JAVA_PARAMS=2" \
+    dockerfile.jdk8.alpine.34.111
     
-[source,java,medium]
-java  -Xms256M -Xmx512M  KaboomServer 9090
+[source,java]
+java -Xms256M -Xmx512M  KaboomServer 9090
   
   
 [NOTE.speaker]
@@ -145,10 +148,12 @@ CAS : It still does not crash but gosh it swap so much, and if crahs sometime
 // [source,java,medium]
 //  ./src/main/demoscript/coyote.js --action run --image 0 --docker-param 2 --java-param 2
 
-[source,java,medium]
-docker run -it -m 512M -p 9090:9090 -e "JAVA_PARAMS=3" dockerfile.jdk8.alpine.34.111
+[source,java]
+docker run -it -m 512M -p 9090:9090 \
+    -e "JAVA_PARAMS=3" \
+    dockerfile.jdk8.alpine.34.111
     
-[source,java,medium]
+[source,java]
 java -Xms512M -Xmx1024M  KaboomServer 9090
 
 [NOTE.speaker]
@@ -163,10 +168,13 @@ CAS : In fact, this will fill the swap, but in order to show it, we will increas
 // [source,java,medium]
 // ./src/main/demoscript/coyote.js --action run --image 0 --docker-param 3 --java-param 3
   
-[source,java,medium]
-docker run -it -m 512M --memory-swap -1 -p 9090:9090 -e "JAVA_PARAMS=3" dockerfile.jdk8.alpine.34.111
+[source,java]
+docker run -it -m 512M \
+    --memory-swap -1 -p 9090:9090 \
+    -e "JAVA_PARAMS=3" \
+    dockerfile.jdk8.alpine.34.111
    
-[source,java,medium]
+[source,java]
 java Xms512M -Xmx1024M  KaboomServer 9090
 
 [NOTE.speaker]
@@ -182,10 +190,13 @@ CAS : In fact, this will still fill the swap, but in order to show it, we will i
 //[source,java,medium]
 // ./src/main/demoscript/coyote.js --action run --image 0 --docker-param 3 --java-param 3
   
-[source,java,medium]
-docker run -it -m 512M --memory-swap 515M -p 9090:9090 -e "JAVA_PARAMS=3" dockerfile.jdk8.alpine.34.111
+[source,java]
+docker run -it -m 512M \
+    --memory-swap 515M -p 9090:9090 \
+    -e "JAVA_PARAMS=3" \
+    dockerfile.jdk8.alpine.34.111
    
-[source,java,medium]
+[source,java]
 java Xms512M -Xmx1024M  KaboomServer 9090
 
 [NOTE.speaker]
@@ -262,25 +273,31 @@ image::emclume.jpg[scaledwidth=70%]
 //[source,java,medium]
 // ./src/main/demoscript/coyote.js --action run --image 1 --docker-param 2 --java-param 20
 
-[source,java,medium] 
-docker run -it -m 512M -p 9090:9090 -e "JAVA_PARAMS=20" \
- dockerfile.jdk8.alpine.36.131
+[source,java]
+docker run -it -m 512M -p 9090:9090 \
+    -e "JAVA_PARAMS=20" \
+    dockerfile.jdk8.alpine.36.131
 
-[source,java,medium]   
-cmd : java  -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -XshowSettings:vm  KaboomServer 9090
+[source,java]
+java -XX:+UnlockExperimentalVMOptions \
+     -XX:+UseCGroupMemoryLimitForHeap \
+     -XshowSettings:vm KaboomServer 9090
 
 === Beware Xmx do override
 
 //[source,java,medium]
 // ./src/main/demoscript/coyote.js --action run --image 1 --docker-param 2 --java-param 21
 
-[source,java,medium] 
-docker run -it -m 512M -p 9090:9090 -e "JAVA_PARAMS=21" \
- dockerfile.jdk8.alpine.36.131
+[source,java]
+docker run -it -m 512M -p 9090:9090 \
+    -e "JAVA_PARAMS=21" \
+    dockerfile.jdk8.alpine.36.131
 
-[source,java,medium]   
-cmd : java  -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -XX:MaxRAMFraction=1 -XshowSettings:vm  KaboomServer 9090
-    
+[source,java]
+java -XX:+UnlockExperimentalVMOptions \
+     -XX:+UseCGroupMemoryLimitForHeap \
+     -XX:MaxRAMFraction=1 \
+     -XshowSettings:vm KaboomServer 9090
 
 
 === thinks -XX:MaxRAMFraction=1
@@ -288,14 +305,16 @@ cmd : java  -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -X
 //[source,java,medium]
 //  ./src/main/demoscript/coyote.js --action run --image 1 --docker-param 2 --java-param 22
   
-[source,java,medium]
-docker run -it -m 512M  -p 9090:9090 \
- -e "JAVA_PARAMS=22" dockerfile.jdk8.alpine.36.131
+[source,java]
+docker run -it -m 512M -p 9090:9090 \
+    -e "JAVA_PARAMS=22" \
+    dockerfile.jdk8.alpine.36.131
 
-[source,java,medium]  
+[source,java]
 java -XX:+UnlockExperimentalVMOptions \
- -XX:+UseCGroupMemoryLimitForHeap -XX:MaxRAMFraction=1 \
- -XshowSettings:vm KaboomServer 9090
+     -XX:+UseCGroupMemoryLimitForHeap \
+     -XX:MaxRAMFraction=1 \
+     -XshowSettings:vm KaboomServer 9090
 
 
 == Take away
@@ -323,17 +342,18 @@ VM settings:
 
 -XX:MaxMetaspaceSize
 
+=== Memory Dump On Error
 
+[source,java]
+-XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/var/dump
 
 === Native Memory Tracking
 
-[source,java,medium]
+[source,java]
 --XX:NativeMemoryTracking=summary
 jcmd <pid> VM.native_memory summary
 
 image::jcmd.png[]
-
-=== you should always have 3 elements at least ;-)
 
 
 

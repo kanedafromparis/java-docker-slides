@@ -55,6 +55,7 @@ public class Server {
     static void readContentWithMime(HttpExchange t, String path) throws IOException {
 
         if (path.endsWith(".jpg")
+                || path.endsWith(".gif")
                 || path.endsWith(".js")
                 || path.endsWith(".ttf")
                 || path.endsWith(".woff")

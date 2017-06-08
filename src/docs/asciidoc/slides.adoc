@@ -222,23 +222,28 @@ CAS : think /proc..., think maloc
 CAS : think /proc..., think maloc 
 --
 
-=== JVM in a Dockerland 
+=== What you tend to believe 
 
-@todo draw the vm memory guest
-
-=== JVM in a Dockerland 
-
-@todo draw the vm memory guest
+image::MemoryDiagram-001.png[]
 
 
-
-=== What can we do
-
-== Tune your Xmx
-
-//image::http://blog.christianposta.com/images/fabric8_logo.svg[]
+[NOTE.speaker]
+--
+OffHeap consists of thread stacks, direct buffers, mapped files (libraries and jars) and JVM code itself;
+--
 
 
+=== but in fact... 
+
+image::MemoryDiagram-002.png[]
+
+
+
+== So What can we do
+
+image::femal-costum.jpg[]
+
+=== Tune your Xmx
 
 [NOTE.speaker]
 --
@@ -247,11 +252,8 @@ https://github.com/fabric8io-images/java/blob/master/images/jboss/openjdk8/jdk/c
 
 --
 
-== use jdk9
+=== use jdk9 ExperimentalVMOptions
 
-
-
-== ExperimentalVMOptions
 
 image::emclume.jpg[scaledwidth=70%]
 
@@ -312,6 +314,9 @@ CAS :
 
 
 === some useful -X options
+
+-XX:MaxMetaspaceSize
+
 
 
 === you shoudl alway have 3 elements at least ;-)

@@ -1,7 +1,7 @@
 #!/usr/bin/jjs -fv
 #
 #
-# reminder : docker run --rm -t -i pj170613-01 /bin/sh
+# reminder : docker run --rm -t -i dockerfile.jdk8.alpine.36.131 /bin/sh
 #
 # export JAVA_HOME=$(/usr/libexec/java_home -v 1.8)
 # @todo

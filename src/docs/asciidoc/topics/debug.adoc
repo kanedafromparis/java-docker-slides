@@ -1,0 +1,16 @@
+
+
+== Debugging
+
+ *
+ *
+
+=== Todo
+
+image::coyote-plan.jpg[scaledwidth=70%]
+
+[NOTE.speaker]
+--
+CAS : 
+--
+

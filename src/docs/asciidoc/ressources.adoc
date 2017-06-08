@@ -74,6 +74,7 @@ Press the down arrow key to see the next sub-slide.
  - https://shipilev.net/jvm-anatomy-park/
  - https://developers.redhat.com/blog/2017/03/14/java-inside-docker/
  - http://matthewkwilliams.com/index.php/2016/03/17/docker-cgroups-memory-constraints-and-java-cautionary-tale/
+ - http://openjdk.java.net/jeps/8174901
  
 === misc 
  - https://expressjs.com/en/starter/hello-world.html

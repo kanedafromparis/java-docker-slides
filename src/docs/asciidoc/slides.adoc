@@ -95,7 +95,7 @@ docker run -it -m 256M -p 9090:9090 \
     dockerfile.jdk8.alpine.34.111
    
 [source,java]
-java  KaboomServer 9090
+java KaboomServer 9090
   
 
 [NOTE.speaker]
@@ -115,7 +115,7 @@ docker run -it -m 512M -p 9090:9090 \
     dockerfile.jdk8.alpine.34.111
     
 [source,java]
-java  KaboomServer 9090
+java KaboomServer 9090
 
 [NOTE.speaker]
 --
@@ -175,7 +175,7 @@ docker run -it -m 512M \
     dockerfile.jdk8.alpine.34.111
    
 [source,java]
-java Xms512M -Xmx1024M  KaboomServer 9090
+java -Xms512M -Xmx1024M  KaboomServer 9090
 
 [NOTE.speaker]
 --
@@ -197,7 +197,7 @@ docker run -it -m 512M \
     dockerfile.jdk8.alpine.34.111
    
 [source,java]
-java Xms512M -Xmx1024M  KaboomServer 9090
+java -Xms512M -Xmx1024M  KaboomServer 9090
 
 [NOTE.speaker]
 --

@@ -14,7 +14,7 @@ image::akira-java-docker.jpg[scaledwidth=55%]
 
 [medium]
 Le code et les situations de ce récit étant purement fictifs, toute ressemblance avec des personnes ou des situations existantes ou ayant existées ne saurait être que fortuite ;-)
- 
+
 [NOTE.speaker]
 --
 To do
@@ -27,7 +27,7 @@ To do
 |Jean-Christophe Sirot |Charles Sabourdin
 a|image::JcSirot-02.png[scaledwidth=65%]         a|image::CaSabourdin-02.png[scaledwidth=65%]
 |Tech lead chez Weborama        a|Architecte chez IPPON technologies
-|       | 
+|       |
 |======================
 
 == My microservice
@@ -86,17 +86,17 @@ image::coyote-plan.jpg[scaledwidth=70%]
 === Shared ressources
 
 start n docker with 256M (this is production, ressources are shared ;-)
-  
+
 // [source,bash,medium]
 // ./src/main/demoscript/coyote.js --action run --image 0 --docker-param 1 --java-param 0
-   
+
 [source,java]
 docker run -it -m 256M -p 9090:9090 \
     dockerfile.jdk8.alpine.34.111
-   
+
 [source,java]
 java KaboomServer 9090
-  
+
 
 [NOTE.speaker]
 --
@@ -109,17 +109,17 @@ Please production increase ram to the docker it has been "OOMKilled"
 
 // [source,java,medium]
 //  ./src/main/demoscript/coyote.js --action run --image 0 --docker-param 2 --java-param 0
-   
+
 [source,java]
 docker run -it -m 512M -p 9090:9090 \
     dockerfile.jdk8.alpine.34.111
-    
+
 [source,java]
 java KaboomServer 9090
 
 [NOTE.speaker]
 --
-CAS : It still crash that't you code dude, please set Xmx correctly...   
+CAS : It still crash that't you code dude, please set Xmx correctly...
 --
 
 === set -Xms256M -Xmx512M
@@ -127,19 +127,19 @@ CAS : It still crash that't you code dude, please set Xmx correctly...
 
 // [source,java,medium]
 //  ./src/main/demoscript/coyote.js --action run --image 0 --docker-param 2 --java-param 2
-  
+
 [source,java]
 docker run -it -m 512M -p 9090:9090 \
     -e "JAVA_PARAMS=2" \
     dockerfile.jdk8.alpine.34.111
-    
+
 [source,java]
 java -Xms256M -Xmx512M  KaboomServer 9090
-  
-  
+
+
 [NOTE.speaker]
 --
-CAS : It still does not crash but gosh it swap so much, and if crahs sometime   
+CAS : It still does not crash but gosh it swaps so much, and if crahs sometime
 --
 
 === Something that never happen ;-)
@@ -152,7 +152,7 @@ CAS : It still does not crash but gosh it swap so much, and if crahs sometime
 docker run -it -m 512M -p 9090:9090 \
     -e "JAVA_PARAMS=3" \
     dockerfile.jdk8.alpine.34.111
-    
+
 [source,java]
 java -Xms512M -Xmx1024M  KaboomServer 9090
 
@@ -162,18 +162,18 @@ CAS : In fact, this will fill the swap, but in order to show it, we will increas
 --
 
 
-=== It swap too much ? Let's remove it
+=== It swaps too much ? Let's remove it
 
 
 // [source,java,medium]
 // ./src/main/demoscript/coyote.js --action run --image 0 --docker-param 3 --java-param 3
-  
+
 [source,java]
 docker run -it -m 512M \
     --memory-swap -1 -p 9090:9090 \
     -e "JAVA_PARAMS=3" \
     dockerfile.jdk8.alpine.34.111
-   
+
 [source,java]
 java -Xms512M -Xmx1024M  KaboomServer 9090
 
@@ -182,20 +182,20 @@ java -Xms512M -Xmx1024M  KaboomServer 9090
 CAS : In fact, this will still fill the swap, but in order to show it, we will increase the -Xmx
 --
 
-=== Hey, dude, read the doc ;-)
+=== Hey, dude! Read the doc ;-)
 
 // [source,bash,medium]
 // sudo swapon -a
 
 //[source,java,medium]
 // ./src/main/demoscript/coyote.js --action run --image 0 --docker-param 3 --java-param 3
-  
+
 [source,java]
 docker run -it -m 512M \
     --memory-swap 515M -p 9090:9090 \
     -e "JAVA_PARAMS=3" \
     dockerfile.jdk8.alpine.34.111
-   
+
 [source,java]
 java -Xms512M -Xmx1024M  KaboomServer 9090
 
@@ -210,30 +210,30 @@ CAS : In fact, this will still fill the swap, but in order to show it, we will i
 
 image::helpCoyote.jpg[]
 
-=== Something to remember 
+=== Something to remember
 
  * Docker is not a VM
- * It's link to the kernel
+ * It's linked to the kernel
 
- 
+
 [NOTE.speaker]
 --
-CAS : think /proc..., think maloc 
+CAS : think /proc..., think maloc
 --
 
-=== Remember where it came from 
+=== Remember where it came from
 
- * Lxc 
+ * Lxc
  * chroot
  * (bsd) jail
 
- 
+
 [NOTE.speaker]
 --
-CAS : think /proc..., think maloc 
+CAS : think /proc..., think maloc
 --
 
-=== What you tend to believe 
+=== What you tend to believe
 
 image::MemoryDiagram-001.png[]
 
@@ -244,13 +244,13 @@ OffHeap consists of thread stacks, direct buffers, mapped files (libraries and j
 --
 
 
-=== but in fact... 
+=== but in fact...
 
 image::MemoryDiagram-002.png[]
 
 
 
-== So What can we do
+== So What can we do?
 
 image::femal-costum.jpg[]
 
@@ -271,7 +271,7 @@ jdk9 or jdk8 > 8u131
 
 image::emclume.jpg[scaledwidth=70%]
 
-=== Use cgroup 
+=== Use cgroup
 
  -XX:+UseCGroupMemoryLimitForHeap
 
@@ -304,13 +304,13 @@ java -XX:+UnlockExperimentalVMOptions \
      -Xms256M -Xmx512M \
      -XshowSettings:vm KaboomServer 9090
 
-=== thinks fraction 
+=== thinks fraction
 
  -XX:MaxRAMFraction=1
 
 //[source,java,medium]
 //  ./src/main/demoscript/coyote.js --action run --image 1 --docker-param 2 --java-param 22
-  
+
 [source,java]
 docker run -it -m 512M -p 9090:9090 \
     -e "JAVA_PARAMS=22" \
@@ -322,16 +322,17 @@ java -XX:+UnlockExperimentalVMOptions \
      -XX:MaxRAMFraction=1 \
      -XshowSettings:vm KaboomServer 9090
 
-=== by the way  
+=== by the way
 
-  jvm will respect --cpuset-cpus 
-  unless you overide with 
-  -XX:ParallelGCThreads or -XX:CICompilerCount	
+  jvm will respect --cpuset-cpus
+  unless you overide with
+  -XX:ParallelGCThreads or -XX:CICompilerCount
 
   mais ...
 //[source,java,medium]
-//  ./src/main/demoscript/coyote.js --action run --image 1 --docker-param 5 --java-param 22
-  
+//  ./src/main/demoscript/coyote.js --action run --image 1 \
+//    --docker-param 5 --java-param 22
+
 [source,java]
 docker run -it -m 512M \
     --cpuset-cpus=2 -p 9090:9090 \
@@ -351,7 +352,7 @@ image::willy-il-coyote-arrow.jpg[scaledwidth=70%]
 
 [NOTE.speaker]
 --
-CAS : 
+CAS :
  - VM java et JM docker have philo similarity
  - Docker is not VM
  - Let docker deal with ressource management
@@ -383,7 +384,9 @@ jcmd <pid> VM.native_memory summary
 
 image::jcmd.png[]
 
+=== Tuning
 
+image::gc.jpg[]
 
 == Questions
 
